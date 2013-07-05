@@ -1,0 +1,17 @@
+{
+  "name": "figo/figo",
+  "description": "API wrapper for figo Connect.",
+  "license": "MIT",
+  "autoload": {
+    "psr-0": {
+      "figo": ""
+    }
+  },
+  "require": {
+    "php": ">=5.3.2"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "3.7.*",
+    "apigen/apigen": ">=2.8.0"
+  }
+}

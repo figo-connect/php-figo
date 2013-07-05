@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class figo\Transaction</title>
+
+	<script type="text/javascript" src="resources/combined.js?2404612897"></script>
+	<script type="text/javascript" src="elementlist.js?1225341815"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Namespaces</h3>
+			<ul>
+				<li class="active"><a href="namespace-figo.html">figo</a>
+						</li>
+				<li><a href="namespace-PHP.html">PHP</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-figo.Account.html">Account</a></li>
+				<li><a href="class-figo.AccountBalance.html">AccountBalance</a></li>
+				<li><a href="class-figo.AccountType.html">AccountType</a></li>
+				<li><a href="class-figo.Base.html">Base</a></li>
+				<li><a href="class-figo.Config.html">Config</a></li>
+				<li><a href="class-figo.Connection.html">Connection</a></li>
+				<li><a href="class-figo.HttpsRequest.html">HttpsRequest</a></li>
+				<li><a href="class-figo.Notification.html">Notification</a></li>
+				<li><a href="class-figo.Session.html">Session</a></li>
+				<li><a href="class-figo.SynchronizationStatus.html">SynchronizationStatus</a></li>
+				<li class="active"><a href="class-figo.Transaction.html">Transaction</a></li>
+				<li><a href="class-figo.TransactionType.html">TransactionType</a></li>
+			</ul>
+
+
+
+			<h3>Exceptions</h3>
+			<ul>
+				<li><a href="class-figo.Exception.html">Exception</a></li>
+			</ul>
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-figo.html" title="Summary of figo"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class Transaction</h1>
+
+
+	<div class="description">
+	
+<p>Object representing one bank transaction on a certain bank account of the
+user</p>
+
+	</div>
+
+	<dl class="tree">
+		<dd style="padding-left:0px">
+			<a href="class-figo.Base.html"><span>figo\Base</span></a>
+			
+			
+			
+		</dd>
+		<dd style="padding-left:30px">
+			<img src="resources/inherit.png" alt="Extended by" />
+<b><span>figo\Transaction</span></b>			
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-figo.html">figo</a><br />
+		
+
+		<b>Located at</b> <a href="source-class-figo.Transaction.html#27-83" title="Go to source code">Transaction.php</a><br />
+	</div>
+
+
+
+
+	<table class="summary inherited">
+	<caption>Methods inherited from <a href="class-figo.Base.html#methods">figo\Base</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-figo.Base.html#___construct">__construct()</a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="transaction_id" id="$transaction_id">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-figo.Transaction.html#32-33" title="Go to source code"><var>$transaction_id</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$transaction_id" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Internal figo Connect transaction ID</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Internal figo Connect transaction ID</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="account_id" id="$account_id">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-figo.Transaction.html#35-36" title="Go to source code"><var>$account_id</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$account_id" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Internal figo Connect account ID</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Internal figo Connect account ID</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="name" id="$name">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-figo.Transaction.html#38-39" title="Go to source code"><var>$name</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$name" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Name of originator or recipient</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Name of originator or recipient</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="account_number" id="$account_number">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-figo.Transaction.html#41-42" title="Go to source code"><var>$account_number</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$account_number" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Account number of originator or recipient.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Account number of originator or recipient.</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="bank_code" id="$bank_code">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-figo.Transaction.html#44-45" title="Go to source code"><var>$bank_code</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$bank_code" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Bank code of originator or recipient</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Bank code of originator or recipient</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="bank_name" id="$bank_name">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-figo.Transaction.html#47-48" title="Go to source code"><var>$bank_name</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$bank_name" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Bank name of originator or recipient</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Bank name of originator or recipient</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="amount" id="$amount">
+		<td class="attributes"><code>
+			public  
+			float
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-figo.Transaction.html#50-51" title="Go to source code"><var>$amount</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$amount" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Transaction amount</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Transaction amount</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="currency" id="$currency">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-figo.Transaction.html#53-54" title="Go to source code"><var>$currency</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$currency" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Three-character currency code</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Three-character currency code</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="booking_date" id="$booking_date">
+		<td class="attributes"><code>
+			public  
+			DateTime
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-figo.Transaction.html#56-57" title="Go to source code"><var>$booking_date</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$booking_date" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Booking date</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Booking date</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="value_date" id="$value_date">
+		<td class="attributes"><code>
+			public  
+			DateTime
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-figo.Transaction.html#59-60" title="Go to source code"><var>$value_date</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$value_date" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Value date</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Value date</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="purpose" id="$purpose">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-figo.Transaction.html#62-63" title="Go to source code"><var>$purpose</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$purpose" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Purpose text</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Purpose text</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="type" id="$type">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-figo.Transaction.html#65-66" title="Go to source code"><var>$type</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$type" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Transaction type; one of the constants of the <code>TransactionType</code>
+object</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Transaction type; one of the constants of the <code>TransactionType</code>
+object</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="booking_text" id="$booking_text">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-figo.Transaction.html#68-69" title="Go to source code"><var>$booking_text</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$booking_text" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Booking text</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Booking text</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="booked" id="$booked">
+		<td class="attributes"><code>
+			public  
+			boolean
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-figo.Transaction.html#71-72" title="Go to source code"><var>$booked</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$booked" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>This flag indicates whether the transaction is booked or pending</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>This flag indicates whether the transaction is booked or pending</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="creation_timestamp" id="$creation_timestamp">
+		<td class="attributes"><code>
+			public  
+			DateTime
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-figo.Transaction.html#74-75" title="Go to source code"><var>$creation_timestamp</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$creation_timestamp" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Internal creation timestamp on the figo Connect server</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Internal creation timestamp on the figo Connect server</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="modification_timestamp" id="$modification_timestamp">
+		<td class="attributes"><code>
+			public  
+			DateTime
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-figo.Transaction.html#77-78" title="Go to source code"><var>$modification_timestamp</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$modification_timestamp" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Internal modification timestamp on the figo Connect server</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Internal modification timestamp on the figo Connect server</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="visited" id="$visited">
+		<td class="attributes"><code>
+			public  
+			boolean
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-figo.Transaction.html#80-81" title="Go to source code"><var>$visited</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$visited" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>This flag indicates whether the transaction has already been marked as
+visited by the user</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>This flag indicates whether the transaction has already been marked as
+visited by the user</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+	<table class="summary inherited">
+	<caption>Properties inherited from <a href="class-figo.Base.html#properties">figo\Base</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-figo.Base.html#$session"><var>$session</var></a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		 API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>
