@@ -8,7 +8,7 @@ Usage
 
 First, you've to add this to your [`composer.json`](http://getcomposer.org/) dependencies:
 
-```json
+```
 "require": {
   "figo/figo": "1.*"
 }
