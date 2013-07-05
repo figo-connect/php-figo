@@ -41,6 +41,7 @@ class HttpsRequest {
     public function request($path, $data, $method, array $headers) {
         // Open socket.
         $context = stream_context_create();
+        stream_context_set_option($context, "ssl", "cafile", dirname(__FILE__).DIRECTORY_SEPARATOR."cacert.pem");
         stream_context_set_option($context, "ssl", "verify_peer", true);
         stream_context_set_option($context, "ssl", "capture_peer_cert", true);
 
