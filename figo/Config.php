@@ -30,11 +30,10 @@ namespace figo;
 class Config {
 
     /** @var string figo Connect server hostname */
-    public static $API_ENDPOINT = "api.leanbank.com";
+    public static $API_ENDPOINT = "api.figo.me";
 
     /** @var string figo Connect SSL/TLS certificate fingerprints */
-    public static $VALID_FINGERPRINTS = array("A6:FE:08:F4:A8:86:F9:C1:BF:4E:70:0A:BD:72:AE:B8:8E:B7:78:52",
-                                              "AD:A0:E3:2B:1F:CE:E8:44:F2:83:BA:AE:E4:7D:F2:AD:44:48:7F:1E");
+    public static $VALID_FINGERPRINTS = array("3A:62:54:4D:86:B4:34:38:EA:34:64:4E:95:10:A9:FF:37:27:69:C0");
 }
 
 ?>
