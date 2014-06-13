@@ -49,7 +49,7 @@ class Session {
      * @return array JSON response
      */
     public function query_api($path, array $data = null, $method = "GET") {
-        $data = is_null($data) ? "" : json_encode($data, JSON_FORCE_OBJECT);
+        $data = is_null($data) ? "" : json_encode($data);
 
         $headers = array("Authorization"  => "Bearer ".$this->access_token,
                          "Content-Type"   => "application/json",
