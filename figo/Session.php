@@ -232,6 +232,18 @@ class Session {
     }
 
     /**
+     * Request a single transaction
+     *
+     * @param string account ID
+     * @param string transaction ID
+     * @return Transaction transaction object
+     */
+    public function get_transaction($account_id, $transation_id) {
+        $response = $this->query_api("/rest/accounts/".$account_id."/transactions/".$transation_id);
+        return (is_null($response) ? null : new Transaction($this, $response));
+    }
+
+    /**
      * Request the URL a user should open in the web browser to start the synchronization process
      *
      * @param string the user will be redirected to this URL after the process completes
