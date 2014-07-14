@@ -32,9 +32,8 @@ $session = new Session("ASHWLIkouP2O6_bgA2wWReRhletgWKHYjLqDaqb0LFfamim9RjexTo22
 // Print out list of account numbers and balances.
 $accounts = $session->get_accounts();
 foreach ($accounts as $account) {
-    $balance = $account->get_balance();
     print($account->account_number."\n");
-    print($balance->balance."\n");
+    print($account->balance->balance."\n");
 }
 
 // Print out the list of all transaction originators/recipients of a specific account.
@@ -84,3 +83,8 @@ function process_redirect($authorization_code, $state) {
 ```
 
 You can find more documentation in the `doc/` folder.
+
+Demos
+-----
+In this repository you can also have a look at a simple console(console_demo.py) and web demo(web_demo).
+While the console demo simply accesses the figo API, the web demo implements the full OAuth flow.
