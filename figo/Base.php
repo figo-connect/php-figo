@@ -31,6 +31,8 @@ class Base {
 
     protected $session;
 
+    protected $dump_attributes = array();
+
     /**
      * Constructor
      *
@@ -42,8 +44,10 @@ class Base {
 
         foreach ($map as $key => $value) {
             $this->$key = $value;
-            if ($key === "status") {
+            if ($key === "status" && is_array($value)) {
                 $this->$key = new SynchronizationStatus($session, $value);
+            } elseif ($key === "balance" && is_array($value)) {
+                $this->$key = new AccountBalance($session, $value);
             } elseif (substr($key, -5) === "_date" || substr($key, -10) === "_timestamp") {
                 $this->$key = new \DateTime($value, new \DateTimeZone("UTC"));
             } else {
@@ -52,6 +56,16 @@ class Base {
         }
     }
 
+    public function dump() {
+        $result = array();
+        foreach ($this->dump_attributes as $attribute) {
+            if (!is_null($this->$attribute)) {
+                $result[$attribute] = $this->$attribute;
+            }
+        }
+
+        return $result;
+    }
 }
 
 ?>

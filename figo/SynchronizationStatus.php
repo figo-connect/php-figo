@@ -29,6 +29,8 @@ namespace figo;
  */
 class SynchronizationStatus extends Base {
 
+    protected $dump_attributes = array();
+
     /** @var integer Internal figo Connect status code */
     public $code;
 
@@ -40,7 +42,6 @@ class SynchronizationStatus extends Base {
 
     /** @var DateTime Timestamp of last successful synchronization */
     public $success_timestamp;
-
 }
 
 ?>

@@ -55,7 +55,6 @@ class Exception extends \Exception {
     public function __toString() {
         return $this->error_description."\n";
     }
-
 }
 
 ?>

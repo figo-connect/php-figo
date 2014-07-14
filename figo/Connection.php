@@ -47,7 +47,7 @@ class Connection {
     }
 
     /**
-     * Helper method for making a OAuth 2.0 request 
+     * Helper method for making a OAuth 2.0 request
      *
      * @param string the URL path on the server
      * @param array this optional associative array will be used as url-encoded POST content.
@@ -93,26 +93,26 @@ class Connection {
     /**
      * Exchange authorization code or refresh token for access token.
      *
-     * @param string either the authorization code received as part of the call to the 
+     * @param string either the authorization code received as part of the call to the
      *        redirect URL at the end of the logon process, or a refresh token
      * @param string scope of data access to ask the user for, e.g. <code>accounts=ro</code>
      * @return array associative array with the keys <code>access_token</code>, <code>refresh_token</code>
      *         and <code>expires</code>, as documented in the figo Connect API specification
      */
     public function obtain_access_token($authorization_code_or_refresh_token, $scope = null) {
-      // Authorization codes always start with "O" and refresh tokens always start with "R".
-      if ($authorization_code_or_refresh_token[0] === "O") {
-        $data = array("grant_type" => "authorization_code", "code" => $authorization_code_or_refresh_token);
-        if (!is_null($this->redirect_uri)) {
-            $data["redirect_uri"] = $this->redirect_uri;
+        // Authorization codes always start with "O" and refresh tokens always start with "R".
+        if ($authorization_code_or_refresh_token[0] === "O") {
+            $data = array("grant_type" => "authorization_code", "code" => $authorization_code_or_refresh_token);
+            if (!is_null($this->redirect_uri)) {
+                $data["redirect_uri"] = $this->redirect_uri;
+            }
+        } elseif ($authorization_code_or_refresh_token[0] === "R") {
+            $data = array("grant_type" => "refresh_token", "refresh_token" => $authorization_code_or_refresh_token);
+            if (!is_null($scope)) {
+                $data["scope"] = $scope;
+            }
         }
-      } elseif ($authorization_code_or_refresh_token[0] === "R") {
-        $data = array("grant_type" => "refresh_token", "refresh_token" => $authorization_code_or_refresh_token);
-        if (!is_null($scope)) {
-            $data["scope"] = $scope;
-        }
-      }
-      return $this->query_api("/auth/token", $data);
+        return $this->query_api("/auth/token", $data);
     }
 
     /**
@@ -123,10 +123,25 @@ class Connection {
      * @param string access or refresh token to be revoked
      */
     public function revoke_token($refresh_token_or_access_token) {
-      $data = array("token" => $refresh_token_or_access_token);
-      $this->query_api("/auth/revoke?".http_build_query($data));
+        $data = array("token" => $refresh_token_or_access_token);
+        $this->query_api("/auth/revoke?".http_build_query($data));
     }
 
+    /**
+     * Create a new figo Account
+     *
+     * @param string First and last name
+     * @param string Email address; It must obey the figo username & password policy
+     * @param string New figo Account password; It must obey the figo username & password policy
+     * @param string Two-letter code of preferred language
+     * @param boolean This flag indicates whether the user has agreed to be contacted by email
+     * @return string Auto-generated recovery password
+     */
+    public function create_user($name, $email, $password, $language='de', $send_newsletter=True) {
+        $data = array('name' => $name, 'email' => $email, 'password' => $password, 'language' => $language, 'send_newsletter' => $send_newsletter, 'affiliate_client_id' => $this->client_id);
+        $response = $this->query_api("/auth/user", $data);
+        return $response["recovery_password"];
+    }
 }
 
 ?>

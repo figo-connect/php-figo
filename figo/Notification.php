@@ -29,6 +29,8 @@ namespace figo;
  */
 class Notification extends Base {
 
+    protected $dump_attributes = array("observe_key", "notify_uri", "state");
+
     /** @var string Internal figo Connect notification ID from the notification registration response */
     public $notification_id;
 
@@ -40,7 +42,6 @@ class Notification extends Base {
 
     /** @var string State similiar to sync and logon process. It will passed as POST payload for webhooks */
     public $state;
-
 }
 
 ?>
