@@ -1,7 +1,7 @@
-php-figo [![Build Status](https://secure.travis-ci.org/figo-connect/php-figo.png)](https://travis-ci.org/figo-connect/php-figo)
+php-figo [![Build Status](https://secure.travis-ci.org/figo-connect/php-figo.png)](https://travis-ci.org/figo-connect/php-figo) [![Packagist Version](http://img.shields.io/packagist/v/figo/figo.svg)](https://packagist.org/packages/figo/figo)
 ========
 
-PHP bindings for the figo Connect API: http://developer.figo.me
+PHP bindings for the figo Connect API: http://docs.figo.io
 
 Usage
 =====
@@ -74,7 +74,7 @@ function process_redirect($authorization_code, $state) {
 
     // Start session.
     $session = new Session($token_dict["access_token"]);
-  
+
     // Print out list of account numbers.
     $accounts = $session->get_accounts();
     foreach ($accounts as $account) {
