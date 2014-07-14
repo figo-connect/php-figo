@@ -111,6 +111,8 @@ class Connection {
             if (!is_null($scope)) {
                 $data["scope"] = $scope;
             }
+        } else {
+            throw new Exception("invalid_token", "invalid code/token");
         }
         return $this->query_api("/auth/token", $data);
     }
