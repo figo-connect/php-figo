@@ -31,6 +31,9 @@ class Bank extends Base {
 
     protected $dump_attributes = array("sepa_creditor_id");
 
+    /** @var string Internal figo Connect bank ID */
+    public $bank_id;
+
     /** @var string SEPA direct debit creditor ID */
     public $sepa_creditor_id;
 
