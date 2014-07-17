@@ -86,5 +86,5 @@ You can find more documentation in the `doc/` folder.
 
 Demos
 -----
-In this repository you can also have a look at a simple console(console_demo.py) and web demo(web_demo).
+In this repository you can also have a look at a simple console (console_demo.php) and web demo (web_demo/).
 While the console demo simply accesses the figo API, the web demo implements the full OAuth flow.
