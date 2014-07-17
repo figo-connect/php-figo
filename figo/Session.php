@@ -129,10 +129,14 @@ class Session {
     /**
      * Remove an account
      *
-     * @param string ID of the account to be removed
+     * @param string Account to be removed or its ID
      */
-    public function remove_account($account_id) {
-        $this->query_api("/rest/accounts/".$account_id, null, "DELETE");
+    public function remove_account($account_or_id) {
+        if (is_string($account_or_id)) {
+            $this->query_api("/rest/accounts/".$account_or_id, null, "DELETE");
+        } else {
+            $this->query_api("/rest/accounts/".$account_or_id->account_id, null, "DELETE");
+        }
     }
 
     /**
@@ -225,10 +229,14 @@ class Session {
     /**
      * Remove the stored PIN for a bank (if there was one)
      *
-     * @param string ID of the bank whose PIN should be removed
+     * @param string ID of the bank whose PIN should be removed or its ID
      */
-    public function remove_bank_pin($bank_id) {
-        $response = $this->query_api("/rest/banks/".$bank_id."/remove_pin", null, "POST");
+    public function remove_bank_pin($bank_or_id) {
+        if (is_string($bank_or_id)) {
+            $response = $this->query_api("/rest/banks/".$bank_or_id."/remove_pin", null, "POST");
+        } else {
+            $response = $this->query_api("/rest/banks/".$bank_or_id->bank_id."/remove_pin", null, "POST");
+        }
     }
 
     /**
@@ -296,10 +304,14 @@ class Session {
     /**
      * Unregister notification.
      *
-     * @param Notification notification object which should be deleted
+     * @param Notification notification_or_id object which should be deleted or its ID
      */
-    public function remove_notification($notification) {
-      $this->query_api("/rest/notifications/".$notification->notification_id, null, "DELETE");
+    public function remove_notification($notification_or_id) {
+        if(is_string($notification_or_id)) {
+            $this->query_api("/rest/notifications/".$notification_or_id, null, "DELETE");
+        } else {
+            $this->query_api("/rest/notifications/".$notification_or_id->notification_id, null, "DELETE");
+        }
     }
 
     /**
@@ -363,6 +375,14 @@ class Session {
      */
     public function remove_payment($payment) {
       $this->query_api("/rest/accounts/".$payment->account_id."/payments/".$payment->payment_id, null, "DELETE");
+    /**
+     * Delete payment.
+     *
+     * @param string ID of the account on which the payment can be found
+     * @param string ID of the payment to be deleted
+     */
+    public function remove_payment($account_id, $payment_id) {
+        $this->query_api("/rest/accounts/".$account_id."/payments/".$payment_id, null, "DELETE");
     }
 
     /**
