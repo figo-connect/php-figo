@@ -286,8 +286,8 @@ class Session {
      * @return Notification newly created <code>Notification</code> object
      */
     public function add_notification($notification) {
-      $response = $this->query_api("/rest/notifications", $notification->dump(), "POST");
-      return (is_null($response) ? null : new Notification($this, $response));
+        $response = $this->query_api("/rest/notifications", $notification->dump(), "POST");
+        return (is_null($response) ? null : new Notification($this, $response));
     }
 
     /**
@@ -297,8 +297,8 @@ class Session {
      * @return Notification 'Notification' object for the modified notification
      */
     public function modify_notification($notification) {
-      $response = $this->query_api("/rest/notifications/".$notification->notification_id, $notification->dump(), "PUT");
-      return (is_null($response) ? null : new Notification($this, $response));
+        $response = $this->query_api("/rest/notifications/".$notification->notification_id, $notification->dump(), "PUT");
+        return (is_null($response) ? null : new Notification($this, $response));
     }
 
     /**
@@ -353,8 +353,8 @@ class Session {
      * @return Payment newly created <code>Payment</code> object
      */
     public function add_payment($payment) {
-      $response = $this->query_api("/rest/accounts/".$payment->account_id."/payments", $payment->dump(), "POST");
-      return (is_null($response) ? null : new Payment($this, $response));
+        $response = $this->query_api("/rest/accounts/".$payment->account_id."/payments", $payment->dump(), "POST");
+        return (is_null($response) ? null : new Payment($this, $response));
     }
 
     /**
@@ -364,8 +364,8 @@ class Session {
      * @return Payment 'Payment' object for the updated payment
      */
     public function modify_payment($payment) {
-      $response = $this->query_api("/rest/accounts/".$payment->account_id."/payments/".$payment->payment_id, $payment->dump(), "PUT");
-      return (is_null($response) ? null : new Payment($this, $response));
+        $response = $this->query_api("/rest/accounts/".$payment->account_id."/payments/".$payment->payment_id, $payment->dump(), "PUT");
+        return (is_null($response) ? null : new Payment($this, $response));
     }
 
     /**
@@ -374,7 +374,9 @@ class Session {
      * @param Payment payment object which should be deleted
      */
     public function remove_payment($payment) {
-      $this->query_api("/rest/accounts/".$payment->account_id."/payments/".$payment->payment_id, null, "DELETE");
+        $this->query_api("/rest/accounts/".$payment->account_id."/payments/".$payment->payment_id, null, "DELETE");
+    }
+
     /**
      * Delete payment.
      *
