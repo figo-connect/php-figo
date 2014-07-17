@@ -25,16 +25,18 @@ namespace figo;
 
 
 /**
- * Account type enumeration
+ * Object representing one bank configured by the user
  */
-class AccountType {
-    const GIRO        = "Giro account";
-    const SAVINGS     = "Savings account";
-    const CREDIT_CARD = "Credit card";
-    const LOAN        = "Loan account";
-    const PAYPAL      = "PayPal";
-    const CASH_BOOK   = "Cash book";
-    const UNKNOWN     = "Unknown";
-}
+class Bank extends Base {
 
-?>
+    protected $dump_attributes = array("sepa_creditor_id");
+
+    /** @var string Internal figo Connect bank ID */
+    public $bank_id;
+
+    /** @var string SEPA direct debit creditor ID */
+    public $sepa_creditor_id;
+
+    /** @var bool This flag indicates whether the user has chosen to save the PIN on the figo Connect server */
+    public $save_pin;
+}

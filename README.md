@@ -1,7 +1,7 @@
-php-figo [![Build Status](https://secure.travis-ci.org/figo-connect/php-figo.png)](https://travis-ci.org/figo-connect/php-figo)
+php-figo [![Build Status](https://secure.travis-ci.org/figo-connect/php-figo.png)](https://travis-ci.org/figo-connect/php-figo) [![Packagist Version](http://img.shields.io/packagist/v/figo/figo.svg)](https://packagist.org/packages/figo/figo)
 ========
 
-PHP bindings for the figo Connect API: http://developer.figo.me
+PHP bindings for the figo Connect API: http://docs.figo.io
 
 Usage
 =====
@@ -32,9 +32,8 @@ $session = new Session("ASHWLIkouP2O6_bgA2wWReRhletgWKHYjLqDaqb0LFfamim9RjexTo22
 // Print out list of account numbers and balances.
 $accounts = $session->get_accounts();
 foreach ($accounts as $account) {
-    $balance = $account->get_balance();
     print($account->account_number."\n");
-    print($balance->balance."\n");
+    print($account->balance->balance."\n");
 }
 
 // Print out the list of all transaction originators/recipients of a specific account.
@@ -74,7 +73,7 @@ function process_redirect($authorization_code, $state) {
 
     // Start session.
     $session = new Session($token_dict["access_token"]);
-  
+
     // Print out list of account numbers.
     $accounts = $session->get_accounts();
     foreach ($accounts as $account) {
@@ -84,3 +83,8 @@ function process_redirect($authorization_code, $state) {
 ```
 
 You can find more documentation in the `doc/` folder.
+
+Demos
+-----
+In this repository you can also have a look at a simple console (console_demo.php) and web demo (web_demo/).
+While the console demo simply accesses the figo API, the web demo implements the full OAuth flow.

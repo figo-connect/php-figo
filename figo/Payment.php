@@ -25,53 +25,50 @@ namespace figo;
 
 
 /**
- * Object representing one bank transaction on a certain bank account of the user
+ * Object representing a payment
  */
-class Transaction extends Base {
+class Payment extends Base {
 
-    protected $dump_attributes = array();
+    protected $dump_attributes = array("type", "name", "account_number", "bank_code", "amount", "currency", "purpose");
 
-    /** @var string Internal figo Connect transaction ID */
-    public $transaction_id;
+    /** @var string Internal figo Connect payment ID */
+    public $payment_id;
 
     /** @var string Internal figo Connect account ID */
     public $account_id;
 
-    /** @var string Name of originator or recipient */
+    /** @var string Payment type */
+    public $type;
+
+    /** @var string Name of creditor or debtor */
     public $name;
 
-    /** @var string Account number of originator or recipient. */
+    /** @var string Account number of creditor or debtor */
     public $account_number;
 
-    /** @var string Bank code of originator or recipient */
+    /** @var string Bank code of creditor or debtor */
     public $bank_code;
 
-    /** @var string Bank name of originator or recipient */
+    /** @var string Bank name of creditor or debtor */
     public $bank_name;
 
-    /** @var double Transaction amount */
+    /** @var string Icon of creditor or debtor bank */
+    public $bank_icon;
+
+    /** @var dictionary Icon of the creditor or debtor bank in other resolutions */
+    public $bank_additional_icons;
+
+    /** @var float Order amount */
     public $amount;
 
     /** @var string Three-character currency code */
     public $currency;
 
-    /** @var DateTime Booking date */
-    public $booking_date;
-
-    /** @var DateTime Value date */
-    public $value_date;
-
     /** @var string Purpose text */
     public $purpose;
 
-    /** @var string Transaction type */
-    public $type;
-
-    /** @var string Booking text */
-    public $booking_text;
-
-    /** @var boolean This flag indicates whether the transaction is booked or pending */
-    public $booked;
+    /** @var DateTime Timestamp of submission to the bank server */
+    public $submission_timestamp;
 
     /** @var DateTime Internal creation timestamp on the figo Connect server */
     public $creation_timestamp;
@@ -79,8 +76,6 @@ class Transaction extends Base {
     /** @var DateTime Internal modification timestamp on the figo Connect server */
     public $modification_timestamp;
 
-    /** @var boolean This flag indicates whether the transaction has already been marked as visited by the user */
-    public $visited;
+    /** @var string Transaction ID. This field is only set if the payment has been matched to a transaction */
+    public $transaction_id;
 }
-
-?>

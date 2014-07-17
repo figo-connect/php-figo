@@ -29,6 +29,8 @@ namespace figo;
  */
 class AccountBalance extends Base {
 
+    protected $dump_attributes = array("credit_line", "monthly_spending_limit");
+
     /** @var double Account balance or <code>null</code> if the balance is not yet known */
     public $balance;
 
@@ -43,7 +45,6 @@ class AccountBalance extends Base {
 
     /** @var SynchronizationStatus Synchronization status object */
     public $status;
-
 }
 
 ?>
