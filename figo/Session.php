@@ -371,15 +371,6 @@ class Session {
     /**
      * Delete payment.
      *
-     * @param Payment payment object which should be deleted
-     */
-    public function remove_payment($payment) {
-        $this->query_api("/rest/accounts/".$payment->account_id."/payments/".$payment->payment_id, null, "DELETE");
-    }
-
-    /**
-     * Delete payment.
-     *
      * @param string ID of the account on which the payment can be found
      * @param string ID of the payment to be deleted
      */
