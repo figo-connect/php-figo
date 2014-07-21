@@ -371,20 +371,19 @@ class Session {
     /**
      * Delete payment.
      *
-     * @param Payment payment object which should be deleted
-     */
-    public function remove_payment($payment) {
-        $this->query_api("/rest/accounts/".$payment->account_id."/payments/".$payment->payment_id, null, "DELETE");
-    }
-
-    /**
-     * Delete payment.
-     *
      * @param string ID of the account on which the payment can be found
-     * @param string ID of the payment to be deleted
+     * @param string ID of the payment to be deleted (or null when using a payment instance as first parameter)
      */
-    public function remove_payment($account_id, $payment_id) {
-        $this->query_api("/rest/accounts/".$account_id."/payments/".$payment_id, null, "DELETE");
+    public function remove_payment($account_id_or_payment, $payment_id=null) {
+        if(is_string($account_id_or_payment)) {
+            if(is_string($payment_id)) {
+                $this->query_api("/rest/accounts/".$account_id_or_payment."/payments/".$payment_id, null, "DELETE");
+            } else {
+                throw new Exception('invalid_request', 'Missing payment_id parameter');
+            }
+        } else {
+            $this->query_api("/rest/accounts/".$account_id_or_payment->account_id."/payments/".$account_id_or_payment->payment_id, null, "DELETE");
+        }
     }
 
     /**
