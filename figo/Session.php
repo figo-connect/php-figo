@@ -193,6 +193,18 @@ class Session {
     }
 
     /**
+     * Retrieve a specific transaction
+     *
+     * @param string ID of the account on which the transaction occured
+     * @param string ID of the transaction to be retrieved
+     * @return Transaction a `Transaction` object representing the transaction to be retrieved
+     */
+    public function get_transaction($account_id, $transaction_id) {
+        $response = $this->query_api("/rest/accounts/".$account_id."/transactions/".$transaction_id);
+        return (is_null($response) ? null : new Transaction($this, $response));
+    }
+
+    /**
      * Retrieve a specific bank
      *
      * @param string ID of the bank to be retrieved
@@ -225,18 +237,6 @@ class Session {
         } else {
             $response = $this->query_api("/rest/banks/".$bank_or_id->bank_id."/remove_pin", null, "POST");
         }
-    }
-
-    /**
-     * Request a single transaction
-     *
-     * @param string account ID
-     * @param string transaction ID
-     * @return Transaction transaction object
-     */
-    public function get_transaction($account_id, $transation_id) {
-        $response = $this->query_api("/rest/accounts/".$account_id."/transactions/".$transation_id);
-        return (is_null($response) ? null : new Transaction($this, $response));
     }
 
     /**
