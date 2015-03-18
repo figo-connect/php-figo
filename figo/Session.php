@@ -413,7 +413,7 @@ class Session {
             $data['redirect_uri'] = $redirect_uri;
         }
 
-        $response = $this->query_uri("/rest/accounts/".$payment->account_id."/payments/".$payment->payment_id."/submit", $data, "POST");
+        $response = $this->query_api("/rest/accounts/".$payment->account_id."/payments/".$payment->payment_id."/submit", $data, "POST");
         if (is_null($response)) {
             return  null;
         } else {
