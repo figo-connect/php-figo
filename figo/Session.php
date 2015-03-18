@@ -129,10 +129,14 @@ class Session {
     /**
      * Remove an account
      *
-     * @param string ID of the account to be removed
+     * @param string Account to be removed or its ID
      */
-    public function remove_account($account_id) {
-        $this->query_api("/rest/accounts/".$account_id, null, "DELETE");
+    public function remove_account($account_or_id) {
+        if (is_string($account_or_id)) {
+            $this->query_api("/rest/accounts/".$account_or_id, null, "DELETE");
+        } else {
+            $this->query_api("/rest/accounts/".$account_or_id->account_id, null, "DELETE");
+        }
     }
 
     /**
@@ -225,10 +229,14 @@ class Session {
     /**
      * Remove the stored PIN for a bank (if there was one)
      *
-     * @param string ID of the bank whose PIN should be removed
+     * @param string ID of the bank whose PIN should be removed or its ID
      */
-    public function remove_bank_pin($bank_id) {
-        $response = $this->query_api("/rest/banks/".$bank_id."/remove_pin", null, "POST");
+    public function remove_bank_pin($bank_or_id) {
+        if (is_string($bank_or_id)) {
+            $response = $this->query_api("/rest/banks/".$bank_or_id."/remove_pin", null, "POST");
+        } else {
+            $response = $this->query_api("/rest/banks/".$bank_or_id->bank_id."/remove_pin", null, "POST");
+        }
     }
 
     /**
@@ -290,8 +298,8 @@ class Session {
      * @return Notification newly created <code>Notification</code> object
      */
     public function add_notification($notification) {
-      $response = $this->query_api("/rest/notifications", $notification->dump(), "POST");
-      return (is_null($response) ? null : new Notification($this, $response));
+        $response = $this->query_api("/rest/notifications", $notification->dump(), "POST");
+        return (is_null($response) ? null : new Notification($this, $response));
     }
 
     /**
@@ -301,17 +309,21 @@ class Session {
      * @return Notification 'Notification' object for the modified notification
      */
     public function modify_notification($notification) {
-      $response = $this->query_api("/rest/notifications/".$notification->notification_id, $notification->dump(), "PUT");
-      return (is_null($response) ? null : new Notification($this, $response));
+        $response = $this->query_api("/rest/notifications/".$notification->notification_id, $notification->dump(), "PUT");
+        return (is_null($response) ? null : new Notification($this, $response));
     }
 
     /**
      * Unregister notification.
      *
-     * @param Notification notification object which should be deleted
+     * @param Notification notification_or_id object which should be deleted or its ID
      */
-    public function remove_notification($notification) {
-      $this->query_api("/rest/notifications/".$notification->notification_id, null, "DELETE");
+    public function remove_notification($notification_or_id) {
+        if(is_string($notification_or_id)) {
+            $this->query_api("/rest/notifications/".$notification_or_id, null, "DELETE");
+        } else {
+            $this->query_api("/rest/notifications/".$notification_or_id->notification_id, null, "DELETE");
+        }
     }
 
     /**
@@ -353,8 +365,8 @@ class Session {
      * @return Payment newly created <code>Payment</code> object
      */
     public function add_payment($payment) {
-      $response = $this->query_api("/rest/accounts/".$payment->account_id."/payments", $payment->dump(), "POST");
-      return (is_null($response) ? null : new Payment($this, $response));
+        $response = $this->query_api("/rest/accounts/".$payment->account_id."/payments", $payment->dump(), "POST");
+        return (is_null($response) ? null : new Payment($this, $response));
     }
 
     /**
@@ -364,17 +376,26 @@ class Session {
      * @return Payment 'Payment' object for the updated payment
      */
     public function modify_payment($payment) {
-      $response = $this->query_api("/rest/accounts/".$payment->account_id."/payments/".$payment->payment_id, $payment->dump(), "PUT");
-      return (is_null($response) ? null : new Payment($this, $response));
+        $response = $this->query_api("/rest/accounts/".$payment->account_id."/payments/".$payment->payment_id, $payment->dump(), "PUT");
+        return (is_null($response) ? null : new Payment($this, $response));
     }
 
     /**
      * Delete payment.
      *
-     * @param Payment payment object which should be deleted
+     * @param string ID of the account on which the payment can be found
+     * @param string ID of the payment to be deleted (or null when using a payment instance as first parameter)
      */
-    public function remove_payment($payment) {
-      $this->query_api("/rest/accounts/".$payment->account_id."/payments/".$payment->payment_id, null, "DELETE");
+    public function remove_payment($account_id_or_payment, $payment_id=null) {
+        if(is_string($account_id_or_payment)) {
+            if(is_string($payment_id)) {
+                $this->query_api("/rest/accounts/".$account_id_or_payment."/payments/".$payment_id, null, "DELETE");
+            } else {
+                throw new Exception('invalid_request', 'Missing payment_id parameter');
+            }
+        } else {
+            $this->query_api("/rest/accounts/".$account_id_or_payment->account_id."/payments/".$account_id_or_payment->payment_id, null, "DELETE");
+        }
     }
 
     /**
