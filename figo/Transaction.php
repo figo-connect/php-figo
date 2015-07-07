@@ -81,6 +81,9 @@ class Transaction extends Base {
 
     /** @var boolean This flag indicates whether the transaction has already been marked as visited by the user */
     public $visited;
+
+    /** @var array Contains additional information for PayPal transactions */
+    public $additional_info;
 }
 
 ?>
