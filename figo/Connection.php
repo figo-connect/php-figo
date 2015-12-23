@@ -139,8 +139,8 @@ class Connection {
      * @param boolean This flag indicates whether the user has agreed to be contacted by email
      * @return string Auto-generated recovery password
      */
-    public function create_user($name, $email, $password, $language='de', $send_newsletter=True) {
-        $data = array('name' => $name, 'email' => $email, 'password' => $password, 'language' => $language, 'send_newsletter' => $send_newsletter, 'affiliate_client_id' => $this->client_id);
+    public function create_user($name, $email, $password, $language='de') {
+        $data = array('name' => $name, 'email' => $email, 'password' => $password, 'language' => $language, 'affiliate_client_id' => $this->client_id);
         $response = $this->query_api("/auth/user", $data);
         return $response["recovery_password"];
     }
