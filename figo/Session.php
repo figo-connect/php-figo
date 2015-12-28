@@ -205,6 +205,16 @@ class Session {
     }
 
     /**
+     * Remove a specific transaction
+     *
+     * @param string ID of the account on which the transaction occured
+     * @param string ID of the transaction to be removed
+     */
+    public function remove_transaction($account_id, $transaction_id) {
+        $this->query_api("/rest/accounts/".$account_id."/transactions/".$transaction_id, null, "DELETE");
+    }
+
+    /**
      * Retrieve a specific bank
      *
      * @param string ID of the bank to be retrieved
