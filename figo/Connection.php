@@ -53,7 +53,7 @@ class Connection {
      * @param array this optional associative array will be used as url-encoded POST content.
      * @return array JSON response
      */
-    public function query_api($path, array $data = null) {
+    public function query_api($path, array $data = null, $method='POST') {
         $data = is_null($data) ? "" : http_build_query($data);
 
         $headers = array("Authorization"  => "Basic ".base64_encode($this->client_id.":".$this->client_secret),
@@ -61,7 +61,7 @@ class Connection {
                          "Content-Length" => strlen($data));
 
         $request = new HttpsRequest();
-        return $request->request($path, $data, "POST", $headers);
+        return $request->request($path, $data, $method, $headers);
     }
 
     /**
@@ -88,6 +88,30 @@ class Connection {
             $data["scope"] = $scope;
         }
         return "https://".Config::$API_ENDPOINT."/auth/code?".http_build_query($data);
+    }
+
+
+
+    /**
+     * Retrieve list of supported banks, credit cards, other payment services
+     *
+     * @param String $service      filter the type of service to request (optional): `banks`, `services` or everything (default)
+     * @param String $country_code the country code the service comes from
+     *
+     * @return array
+     */
+    public function get_supported_payment_services($service=null) {
+        switch ($service) {
+            case "banks":
+                $response = $this->query_api("/catalog/banks", null, "GET");
+                break;
+            case "services":
+                $response = $this->query_api("/catalog/services", null, "GET");
+                break;
+            default:
+                $response = $this->query_api("/catalog", null, "GET");
+        }
+        return $response;
     }
 
     /**
@@ -117,6 +141,7 @@ class Connection {
         return $this->query_api("/auth/token", $data);
     }
 
+
     /**
      * Revoke refresh token or access token.
      *
@@ -144,6 +169,8 @@ class Connection {
         $response = $this->query_api("/auth/user", $data);
         return $response["recovery_password"];
     }
+
+
 }
 
 ?>

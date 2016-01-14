@@ -43,9 +43,9 @@ class Session {
     /**
      * Helper method for making a REST request
      *
-     * @param string the URL path on the server
-     * @param array this optional associative array will be used as JSON-encoded POST content.
-     * @param string the HTTP method
+     * @param string $path the URL path on the server
+     * @param array $data this optional associative array will be used as JSON-encoded POST content.
+     * @param string $method the HTTP method
      * @return array JSON response
      */
     public function query_api($path, array $data = null, $method = "GET") {
@@ -79,6 +79,17 @@ class Session {
         $response = $this->query_api("/rest/user", $user->dump(), "PUT");
         return (is_null($response) ? null : new User($this, $response));
     }
+
+
+    /**
+     * Re-send verification E-Mail
+     *
+     * @return array
+     */
+    public function resend_verification() {
+        return $this->query_api('/rest/user/resend_verification',null, 'POST');
+    }
+
 
     /**
      * Delete the current figo account
@@ -165,11 +176,11 @@ class Session {
     /**
      * Retrieve list of transactions (for one account or all)
      *
-     * @param string ID of the account of which the transactions should be retrieved or null for all accounts
-     * @param mixed this parameter can either be a transaction ID or a date
-     * @param integer limit the number of returned transactions
-     * @param integer which offset into the result set should be used to determin the first transaction to return (useful in combination with count)
-     * @param boolean this flag indicates whether pending transactions should be included in the
+     * @param string  $account_id      ID of the account of which the transactions should be retrieved or null for all accounts
+     * @param mixed   $since           this parameter can either be a transaction ID or a date
+     * @param integer $count           limit the number of returned transactions
+     * @param integer $offset          which offset into the result set should be used to determin the first transaction to return (useful in combination with count)
+     * @param boolean $include_pending this flag indicates whether pending transactions should be included in the
      *        response; pending transactions are always included as a complete set, regardless of
      *        the `since` parameter
      * @return array an array of <code>Transaction</code> objects, one for each transaction of the user
@@ -190,6 +201,72 @@ class Session {
             array_push($result, new Transaction($this, $entry));
         }
         return $result;
+    }
+
+    /**
+     * Retrieve a specific standing Order.
+     *
+     * @param String $standing_order_id Id of standing Order to retrieve
+     * @param boolean $cents whetever to show the balance in cents
+     *
+     * @return StandingOrder
+     */
+    public function get_standing_order($standing_order_id, $cents=false) {
+        $response = $this->query_api('/rest/standing_orders/'.$standing_order_id, array('cents' => $cents),'GET');
+        return (is_null($response) ? null : new StandingOrder($this, $response));
+    }
+
+
+    /**
+     * Get all standing orders.
+     *
+     * @param bool $cents
+     * @return array
+     */
+    public function get_standing_orders($cents = false) {
+        $response = $this->query_api("/rest/standing_orders", array('cents' => $cents), 'GET');
+        $result = array();
+        foreach ($response["standing_orders"] as $account) {
+            array_push($result, new StandingOrder($this, $account));
+        }
+        return $result;
+    }
+
+
+
+    /**
+     * Modify transaction for a transaction_id, one account or all Accounts. Only visited param can be change.
+     *
+     * @param int $transaction_id
+     * @param int $account_id
+     * @param boolean $visited
+     *
+     * @return array
+     */
+    public function modify_transaction(Transaction $transaction) {
+        if ($transaction->transaction_id && $transaction->account_id) {
+            return $response = $this->query_api("/rest/accounts/".$transaction->account_id."/transactions/".$transaction->transaction_id, $transaction->dump(), "PUT");
+        } else {
+            throw new Exception("Not a valid Transaction Object: transaction_id or account_id is missing");
+        }
+        return $response;
+    }
+
+    /**
+     * Modify transaction for a transaction_id, one account or all Accounts. Only visited param can be change.
+     *
+     * @param String $account_id Optional, can be null
+     * @param boolean $visited
+     *
+     * @return void
+     */
+    public function modify_transactions($account_id = null, $visited) {
+        $data = array('visited' => $visited);
+        if ($account_id) {
+            $response = $this->query_api("/rest/accounts/".$account_id."/transactions", $data, "PUT");
+        } else {
+            $response = $this->query_api("/rest/transactions", $data, "PUT");
+        }
     }
 
     /**
@@ -315,6 +392,8 @@ class Session {
      * Unregister notification.
      *
      * @param Notification notification_or_id object which should be deleted or its ID
+     *
+     * @return void
      */
     public function remove_notification($notification_or_id) {
         if(is_string($notification_or_id)) {
@@ -383,6 +462,8 @@ class Session {
      *
      * @param string ID of the account on which the payment can be found
      * @param string ID of the payment to be deleted (or null when using a payment instance as first parameter)
+     *
+     * @return void
      */
     public function remove_payment($account_id_or_payment, $payment_id=null) {
         if(is_string($account_id_or_payment)) {
@@ -393,6 +474,78 @@ class Session {
             }
         } else {
             $this->query_api("/rest/accounts/".$account_id_or_payment->account_id."/payments/".$account_id_or_payment->payment_id, null, "DELETE");
+        }
+    }
+
+    /**
+     * Retrieve securities of one or all accounts
+     *
+     * @param String $account_id  Id of the Account the security belongs to
+     * @param String $security_id Id of the security to retrieve
+     *
+     * return Figo\Security
+     */
+    public function get_security($account_id, $security_id) {
+        $response = $this->query_api("/rest/accounts/".$account_id."/securities/".$security_id);
+        return (is_null($response) ? null : new Security($this, $response));
+    }
+
+    /**
+     * Retrieve securities of one or all accounts.
+     *
+     * @param Array $options further options (all are optional)
+            - **account_id** (`String`) - ID of the account for which to retrieve the securities
+            - **accounts** (`Array`) - filter the securities to be only from these accounts
+            - **since** (`Date`) - ISO date filtering the returned securities by their creation or last modification date
+            - **since_type** (`String`) - defines hot the `since` will be interpreted: `traded`, `created` or `modified`
+            - **count** (`Number`) - limit the number of returned transactions
+            - **offset** (`Number`) - offset into the implicit list of transactions
+     *
+     * @return array
+     */
+    public function get_securities($options) {
+        if (isset($options['account_id'])) {
+            $account_id = $options['account_id'];
+            unset($options['account_id']);
+            $response = $this->query_api("/rest/accounts/".$account_id."/securities", $options, 'GET');
+        } else {
+            $response = $this->query_api("/rest/securities", $options, 'GET');
+        }
+        $result = array();
+        foreach ($response["securities"] as $entry) {
+            array_push($result, new Security($this, $entry));
+        }
+
+        return $result;
+    }
+
+    /**
+     * Modify a Security.
+     *
+     * @param $account_id  ID of the account the security belongs to
+     * @param $security_id ID of the security to change
+     * @param $visited     a bit showing whether the user has already seen this security or not
+     *
+     * @return array
+     */
+    public function modify_security($account_id, $security_id, $visited) {
+        $response = $this->query_api("/rest/accounts/".$account_id."/securities/" . $security_id ,array('visited' => $visited), 'PUT');
+        return $response;
+    }
+
+    /**
+     * Modify securities of one or all accounts.
+     *
+     * @param $account_id optional Account Id
+     * @param $visited
+     *
+     * @return void
+     */
+    public function modify_securities($account_id=null, $visited) {
+        if ($account_id) {
+            $response = $this->query_api("/rest/accounts/".$account_id."/securities", array('visited' => $visited), 'PUT');
+        } else {
+            $response = $this->query_api("/rest/securities", array('visited' => $visited) , 'PUT');
         }
     }
 
