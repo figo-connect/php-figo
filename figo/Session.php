@@ -100,6 +100,46 @@ class Session {
         $this->query_api("/rest/user", null, "DELETE");
     }
 
+
+    /**
+     * Poll the task progress
+     *
+     * @param String $task_token given Task Token
+     * @param array $options
+     *           - `pin` - Submit PIN. If this parameter is set, then the parameter save_pin must be set, too.
+     *           - `continue` - This flag signals to continue after an error condition or to skip a PIN or challenge-response entry
+     *           - `save_pin` - This flag indicates whether the user has chosen to save the PIN on the figo Connect server
+     *           - `response` - Submit response to challenge.
+     *
+     * @return array an array of <code>Account</code> objects, one for each account the user has
+     *         granted the app access
+     */
+    public function get_task_state($task_token, $options) {
+        $options['id'] = $task_token;
+        if (!$options['save_pin']) {
+            $options['save_pin'] = 0;
+        }
+        if (!$options['continue']) {
+            $options['continue'] = 0;
+        }
+
+        $response = $this->query_api("/task/progress?id=". $task_token, $options, 'POST');
+
+        return $response;
+    }
+
+    /**
+     * Cancel Task
+     * @param String $task_token given Task Token
+     *
+     * @return void
+     */
+    public function cancel_task($task_token) {
+        return $this->query_api("/task/cancel?id=" . $task_token, array('id' => $task_token), 'POST');
+    }
+
+
+
     /**
      * Retrieve list of accounts
      *
@@ -494,12 +534,12 @@ class Session {
      * Retrieve securities of one or all accounts.
      *
      * @param Array $options further options (all are optional)
-            - **account_id** (`String`) - ID of the account for which to retrieve the securities
-            - **accounts** (`Array`) - filter the securities to be only from these accounts
-            - **since** (`Date`) - ISO date filtering the returned securities by their creation or last modification date
-            - **since_type** (`String`) - defines hot the `since` will be interpreted: `traded`, `created` or `modified`
-            - **count** (`Number`) - limit the number of returned transactions
-            - **offset** (`Number`) - offset into the implicit list of transactions
+    - **account_id** (`String`) - ID of the account for which to retrieve the securities
+    - **accounts** (`Array`) - filter the securities to be only from these accounts
+    - **since** (`Date`) - ISO date filtering the returned securities by their creation or last modification date
+    - **since_type** (`String`) - defines hot the `since` will be interpreted: `traded`, `created` or `modified`
+    - **count** (`Number`) - limit the number of returned transactions
+    - **offset** (`Number`) - offset into the implicit list of transactions
      *
      * @return array
      */
@@ -532,6 +572,7 @@ class Session {
         $response = $this->query_api("/rest/accounts/".$account_id."/securities/" . $security_id ,array('visited' => $visited), 'PUT');
         return $response;
     }
+
 
     /**
      * Modify securities of one or all accounts.
