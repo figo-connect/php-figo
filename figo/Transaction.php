@@ -29,7 +29,7 @@ namespace figo;
  */
 class Transaction extends Base {
 
-    protected $dump_attributes = array();
+    protected $dump_attributes = array('visited');
 
     /** @var string Internal figo Connect transaction ID */
     public $transaction_id;

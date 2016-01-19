@@ -123,6 +123,49 @@ class FigoTest extends PHPUnit_Framework_TestCase {
         $retrieved_payment = $this->sut->get_payment($modified_payment->account_id, $modified_payment->payment_id);
         $this->assertNull($retrieved_payment);
     }
-}
 
+    public function test_security() {
+        $security = $this->sut->get_security('A1.4', 'S1.1');
+        $this->assertInstanceOf('figo\Security', $security);
+        $this->assertEquals(1, count($security));
+
+        $this->assertEquals('S1.1', $security->security_id);
+
+        $options = array(
+            'count' => 2,
+        );
+
+        $security = $this->sut->get_securities($options);
+        $this->assertInternalType('array', $security);
+        $this->assertInstanceOf('figo\Security', $security[0]);
+        $this->assertEquals(2, count($security));
+
+        $options = array(
+            'count' => 1,
+            'account_id' =>'A1.4'
+        );
+
+        $security = $this->sut->get_securities($options);
+        $this->assertInternalType('array', $security);
+        $this->assertInstanceOf('figo\Security', $security[0]);
+
+        $this->assertEquals('A1.4', $security[0]->account_id);
+    }
+
+    public function test_standing_order() {
+        $standing_order = $this->sut->get_standing_order('SO1.1');
+        $this->assertInstanceOf('figo\StandingOrder', $standing_order);
+        $this->assertEquals(1, count($standing_order));
+        $this->assertEquals(100, $standing_order->amount);
+        $this->assertEquals('SO1.1', $standing_order->standing_order_id);
+
+        $standing_order = null;
+        $standing_order = $this->sut->get_standing_orders(true);
+
+        $this->assertInternalType('array', $standing_order);
+        $this->assertInstanceOf('figo\StandingOrder', $standing_order[0]);
+        $this->assertEquals(100.00, $standing_order[0]->amount);
+    }
+
+}
 ?>
