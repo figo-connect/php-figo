@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2013 figo GmbH
+ * Copyright (c) 2016 figo GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,53 +25,47 @@ namespace figo;
 
 
 /**
- * Object representing one bank transaction on a certain bank account of the user
+ * Object representing a payment
  */
-class Transaction extends Base {
+class StandingOrder extends Base {
 
-    protected $dump_attributes = array('visited');
+    protected $dump_attributes = array("type", "name", "account_number", "bank_code", "amount", "currency", "purpose");
 
-    /** @var string Internal figo Connect transaction ID */
-    public $transaction_id;
+    /** @var string Internal figo Connect standing ID */
+    public $standing_order_id;
 
     /** @var string Internal figo Connect account ID */
     public $account_id;
 
-    /** @var string Name of originator or recipient */
+    /** @var string First execution date of the standing order */
+    public $first_execution_date;
+
+    /** @var string The day the standing order gets executed */
+    public $execuction_day;
+
+    /** @var string The interval the standing order gets executed (possible values are weekly, monthly, two monthly, quarterly, half yearly and yearly) */
+    public $interval;
+
+    /** @var string Name of recipient */
     public $name;
 
-    /** @var string Account number of originator or recipient. */
+    /** @var string Account number recipient */
     public $account_number;
 
-    /** @var string Bank code of originator or recipient */
+    /** @var string Bank code of recipient */
     public $bank_code;
 
-    /** @var string Bank name of originator or recipient */
+    /** @var string Bank name of recipient */
     public $bank_name;
 
-    /** @var double Transaction amount */
+    /** @var float Standing order amount */
     public $amount;
 
     /** @var string Three-character currency code */
     public $currency;
 
-    /** @var DateTime Booking date */
-    public $booking_date;
-
-    /** @var DateTime Value date */
-    public $value_date;
-
     /** @var string Purpose text */
     public $purpose;
-
-    /** @var string Transaction type */
-    public $type;
-
-    /** @var string Booking text */
-    public $booking_text;
-
-    /** @var boolean This flag indicates whether the transaction is booked or pending */
-    public $booked;
 
     /** @var DateTime Internal creation timestamp on the figo Connect server */
     public $creation_timestamp;
@@ -79,11 +73,4 @@ class Transaction extends Base {
     /** @var DateTime Internal modification timestamp on the figo Connect server */
     public $modification_timestamp;
 
-    /** @var boolean This flag indicates whether the transaction has already been marked as visited by the user */
-    public $visited;
-
-    /** @var array Contains additional information for PayPal transactions */
-    public $additional_info;
 }
-
-?>

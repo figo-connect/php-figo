@@ -51,17 +51,26 @@ class Connection {
      *
      * @param string the URL path on the server
      * @param array this optional associative array will be used as url-encoded POST content.
+     * @param string $method GET or POST Requests
+     * @param string $encode http_build_query or json_encode
+     *
      * @return array JSON response
      */
-    public function query_api($path, array $data = null) {
-        $data = is_null($data) ? "" : http_build_query($data);
+    public function query_api($path, array $data = null, $method='POST', $encode='http_build_query') {
+        if ($encode != 'http_build_query') {
+            $data = is_null($data) ? "" : json_encode($data);
+            $content_type = "application/json";
+        } else {
+            $data = is_null($data) ? "" : http_build_query($data);
+            $content_type = "application/x-www-form-urlencoded";
+        }
 
         $headers = array("Authorization"  => "Basic ".base64_encode($this->client_id.":".$this->client_secret),
-                         "Content-Type"   => "application/x-www-form-urlencoded",
+                        "Content-Type"   => $content_type,
                          "Content-Length" => strlen($data));
 
         $request = new HttpsRequest();
-        return $request->request($path, $data, "POST", $headers);
+        return $request->request($path, $data, $method, $headers);
     }
 
     /**
@@ -88,6 +97,30 @@ class Connection {
             $data["scope"] = $scope;
         }
         return "https://".Config::$API_ENDPOINT."/auth/code?".http_build_query($data);
+    }
+
+
+
+    /**
+     * Retrieve list of supported banks, credit cards, other payment services
+     *
+     * @param String $service      filter the type of service to request (optional): `banks`, `services` or everything (default)
+     * @param String $country_code the country code the service comes from
+     *
+     * @return array
+     */
+    public function get_supported_payment_services($service=null) {
+        switch ($service) {
+            case "banks":
+                $response = $this->query_api("/catalog/banks", null, "GET");
+                break;
+            case "services":
+                $response = $this->query_api("/catalog/services", null, "GET");
+                break;
+            default:
+                $response = $this->query_api("/catalog", null, "GET");
+        }
+        return $response;
     }
 
     /**
@@ -117,6 +150,7 @@ class Connection {
         return $this->query_api("/auth/token", $data);
     }
 
+
     /**
      * Revoke refresh token or access token.
      *
@@ -128,6 +162,43 @@ class Connection {
         $data = array("token" => $refresh_token_or_access_token);
         $this->query_api("/auth/revoke?".http_build_query($data));
     }
+
+    /**
+     * Create a Process
+     * Example Usage:
+     *   $process = new \figo\Process();
+         $process->email = 'my_email@example.com';
+         $process->password = 'my_password';
+         $process->state = 'First_step';
+         $process->steps =   array(
+            array(
+                'options' => json_decode('{}'),
+                'type' => 'figo.steps.account.create',
+            ),
+            array(
+                'options' => array(
+                'account_number' => '100100100',
+                'amount' =>  99,
+                'bank_code' => "82051000",
+                'currency' => "EUR",
+                'name' => "Figo GmbH",
+                'purpose' => "Yearly contribution",
+                'type' => "Transfer",
+            ),
+            'type' => 'figo.steps.payment.submit',
+            )
+      );
+        $return = $connection->create_process($process);
+     *
+     *
+     * @param Process $process Figo Process
+     *
+     * @return array
+     */
+    public function create_process(Process $process) {
+        return $this->query_api("/client/process", $process->dump(), "POST", "json_encode");
+    }
+
 
     /**
      * Create a new figo Account
@@ -144,6 +215,8 @@ class Connection {
         $response = $this->query_api("/auth/user", $data);
         return $response["recovery_password"];
     }
+
+
 }
 
 ?>
