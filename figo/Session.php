@@ -105,7 +105,7 @@ class Session {
      * Poll the task progress
      *
      * @param String $task_token given Task Token
-     * @param array $options
+     * @param array $options Optional Options:
      *           - `pin` - Submit PIN. If this parameter is set, then the parameter save_pin must be set, too.
      *           - `continue` - This flag signals to continue after an error condition or to skip a PIN or challenge-response entry
      *           - `save_pin` - This flag indicates whether the user has chosen to save the PIN on the figo Connect server
@@ -114,16 +114,15 @@ class Session {
      * @return array an array of <code>Account</code> objects, one for each account the user has
      *         granted the app access
      */
-    public function get_task_state($task_token, $options) {
-        $options['id'] = $task_token;
-        if (!$options['save_pin']) {
-            $options['save_pin'] = 0;
-        }
-        if (!$options['continue']) {
-            $options['continue'] = 0;
-        }
+    public function get_task_state($task_token, $options=array()) {
 
-        $response = $this->query_api("/task/progress?id=". $task_token, $options, 'POST');
+        $transfer_options = array(
+            'id' => $task_token,
+            'save_pin' => isset($options['save_pin']) ? $options['save_pin'] : 0,
+            'continue' => isset($options['continue']) ? $options['continue'] : 0,
+        );
+
+        $response = $this->query_api("/task/progress?id=". $task_token, $transfer_options, 'POST');
 
         return $response;
     }
@@ -380,6 +379,9 @@ class Session {
         $response = $this->query_api("/rest/sync", $data, "POST");
         return "https://".Config::$API_ENDPOINT."/task/start?id=".$response["task_token"];
     }
+
+
+
 
     /**
      * Retrieve all notifications
