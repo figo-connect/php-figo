@@ -82,8 +82,6 @@ function process_redirect($authorization_code, $state) {
 }
 ```
 
-You can find more documentation in the `doc/` folder.
-
 Demos
 -----
 In this repository you can also have a look at a simple console (console_demo.php) and web demo (web_demo/).
