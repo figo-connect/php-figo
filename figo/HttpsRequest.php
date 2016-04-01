@@ -23,7 +23,6 @@
 
 namespace figo;
 
-
 /**
  * HTTPS request class with certificate authentication and enhanced error handling
  */
@@ -32,11 +31,12 @@ class HttpsRequest {
     /**
      * Send client request and return server response.
      *
-     * @param string the URL path on the server
-     * @param string the HTTP body
-     * @param string the HTTP method
-     * @param array additional HTTP headers
+     * @param string $path the URL path on the server
+     * @param string $data the HTTP body
+     * @param string $method the HTTP method
+     * @param array $headers additional HTTP headers
      * @return array JSON response
+     * @throws Exception
      */
     public function request($path, $data, $method, array $headers) {
         // Open socket.
@@ -101,7 +101,7 @@ class HttpsRequest {
              if (is_null($err)) {
                  throw new Exception("json_error", "Cannot decode JSON object.");
              } else {
-                 throw new Exception($err["error"], $err["error_description"]);
+                 throw new Exception($err["error"]["code"], $err["error"]["description"]);
              }
         } elseif ($code === 401) {
             throw new Exception("unauthorized", "Missing, invalid or expired access token.");
