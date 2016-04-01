@@ -101,7 +101,7 @@ class HttpsRequest {
              if (is_null($err)) {
                  throw new Exception("json_error", "Cannot decode JSON object.");
              } else {
-                 throw new Exception($err["error"]["code"], $err["error"]["description"]);
+                 throw new Exception($err["error"]["name"] .":". $err["error"]["message"]." (Error-Code: ".$err["error"]["code"].")" , $err["error"]["description"]);
              }
         } elseif ($code === 401) {
             throw new Exception("unauthorized", "Missing, invalid or expired access token.");
