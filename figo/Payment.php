@@ -29,7 +29,7 @@ namespace figo;
  */
 class Payment extends Base {
 
-    protected $dump_attributes = array("type", "name", "account_number", "bank_code", "amount", "currency", "purpose", "iban");
+    protected $dump_attributes = array("type", "name", "account_number", "bank_code", "amount", "currency", "purpose", "iban", "cents");
 
     /** @var string Internal figo Connect payment ID */
     public $payment_id;
