@@ -480,7 +480,7 @@ class Session {
     /**
      * Create a new payment
      *
-     * @param Payment payment to be created. It should not have its payment_id set
+     * @param array payment to be created. It should not have its payment_id set
      * @return Payment newly created <code>Payment</code> object
      */
     public function add_payment($payment) {
