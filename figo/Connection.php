@@ -217,6 +217,24 @@ class Connection {
     }
 
 
+    /**
+     *
+     * Login with Figo username + password
+     *
+     * @param string figo_user_email
+     * @param string figo_user_password
+     * @param null $scope
+     * @return array
+     */
+    public function get_accessCode_via_userName_and_password($figo_user_email, $figo_user_password, $scope = null) {
+        $grant_type = "password";
+        $data = array("grant_type" => $grant_type, "username" => $figo_user_email, "password" => $figo_user_password);
+        if (!is_null($scope)) {
+            $data["scope"] = $scope;
+        }
+        return $this->query_api("/auth/token", $data);
+    }
+    
 }
 
 ?>

@@ -614,6 +614,26 @@ class Session {
             return "https://".Config::$API_ENDPOINT."/task/start?id=".$response["task_token"];
         }
     }
+
+
+    /**
+     * Add a new bank to your Figo account
+     *
+     * @param $bank_code
+     * @param $country
+     * @param $credentials
+     * @param null $save_pin
+     * @return array
+     */
+    public function add_new_bank_account($bank_code, $country, $credentials, $save_pin = null) {
+        if(is_null($save_pin)) {
+            $save_pin = false;
+        }
+
+        $data = array("bank_code" => $bank_code, "country" => $country, "credentials" => $credentials, "save_pin" => $save_pin);
+        return $this->query_api("/rest/accounts", $data, "POST");
+    }
+
 }
 
 ?>
