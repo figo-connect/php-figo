@@ -138,6 +138,27 @@ class Session {
     }
 
 
+    /**
+     * Set up a new bank account
+     *
+     * @param string Bank code or IBAN (which the bank code is extracted from)
+     * @param string List of login credential strings. They must be in the same order as in the credentials list from the login settings
+     * @param array $options Optional Options:
+     *           - `country` - Two-letter country code. Valid values: de
+     *           - `save_pin` - This flag indicates whether the user has chosen to save the PIN on the figo Connect server
+     *           - `disable_first_sync` - This flag indicates whether the initial sync of the transactions and balances of the newly created accounts should be omitted
+     *           - `sync_tasks` - List of additional information to be fetched from the bank. Possible values are: standingOrders
+     *           - `redirect_uri` - The user will be redirect to this URI after completing the account setup
+     */
+    public function setup_bank_account($bank_code_or_iban, $credentials, $options) {
+        if (is_numeric($bank_code_or_iban)) {
+            $options["bank_code"] = (string) $bank_code_or_iban;
+        } else {
+            $options["iban"] = $bank_code_or_iban;
+        }
+        $options["credentials"] = $credentials;
+        return $this->query_api("/rest/accounts", $options, "POST");
+    }
 
     /**
      * Retrieve list of accounts
