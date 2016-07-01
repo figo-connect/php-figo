@@ -84,5 +84,5 @@ function process_redirect($authorization_code, $state) {
 
 Demos
 -----
-In this repository you can also have a look at a simple console (console_demo.php) and web demo (web_demo/).
+In this repository you can also have a look at a simple console (`console_demo.php`) and web demo (`web_demo` folder).
 While the console demo simply accesses the figo API, the web demo implements the full OAuth flow.
