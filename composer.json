@@ -2,7 +2,7 @@
   "name": "figo/figo",
   "description": "API wrapper for figo Connect.",
   "homepage": "https://github.com/figo-connect/php-figo",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "license": "MIT",
   "autoload": {
     "psr-0": {
