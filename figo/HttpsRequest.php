@@ -45,7 +45,7 @@ class HttpsRequest {
         stream_context_set_option($context, "ssl", "verify_peer", true);
         stream_context_set_option($context, "ssl", "capture_peer_cert", true);
 
-        $fp = stream_socket_client("tls://".Config::$API_ENDPOINT.":443/", $errno, $errstr, 60, STREAM_CLIENT_CONNECT, $context);
+        $fp = stream_socket_client("tlsv1.2://".Config::$API_ENDPOINT.":443/", $errno, $errstr, 60, STREAM_CLIENT_CONNECT, $context);
         if (!$fp) {
             throw new Exception("socket_error", $errstr);
         }
