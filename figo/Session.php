@@ -222,10 +222,11 @@ class Session {
      * @param boolean $include_pending this flag indicates whether pending transactions should be included in the
      *        response; pending transactions are always included as a complete set, regardless of
      *        the `since` parameter
+     * @param string $sort              Determine whether results will be sorted in ascending or descending order.
      * @return array an array of <code>Transaction</code> objects, one for each transaction of the user
      */
-    public function get_transactions($account_id = null, $since = null, $count = 1000, $offset = 0, $include_pending = false) {
-        $data = array("count" => $count, "offset" => $offset, "include_pending" => $include_pending ? "1" : "0");
+    public function get_transactions($account_id = null, $since = null, $count = 1000, $offset = 0, $include_pending = false, $sort = 'desc') {
+        $data = array("count" => $count, "offset" => $offset, "include_pending" => $include_pending ? "1" : "0", "sort" => $sort);
         if (!is_null($since))
             $data["since"] = is_a($since, "\DateTime") ? $since->format("Y-m-d") : $since;
 
