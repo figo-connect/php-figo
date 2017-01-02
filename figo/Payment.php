@@ -29,7 +29,7 @@ namespace figo;
  */
 class Payment extends Base {
 
-    protected $dump_attributes = array("type", "name", "account_number", "bank_code", "amount", "currency", "purpose");
+  protected $dump_attributes = array("type", "name", "account_number", "bank_code", "amount", "currency", "purpose", "iban");
 
     /** @var string Internal figo Connect payment ID */
     public $payment_id;
@@ -57,6 +57,9 @@ class Payment extends Base {
 
     /** @var dictionary Icon of the creditor or debtor bank in other resolutions */
     public $bank_additional_icons;
+
+    /** @var string IBAN of creditor or debtor. Will overwrite bank_code and account_number if both are set */
+    public $iban;
 
     /** @var float Order amount */
     public $amount;
