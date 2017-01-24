@@ -111,18 +111,22 @@ class HttpsRequest {
 
         if ($path === '/task/progress') {
             // when on /task/progress
-            $data = array_merge($loggingData, ['task_id' => $responseArray['task_id']]);
-            if($responseArray['is_erronous']) {
-                $this->logger->info('API Request to /task/progress', $data);
+            if ($code >= 200 && $code < 400) {
+                $data = array_merge($loggingData, ['task_id' => $responseArray['task_id']]);
+                if($responseArray['is_erronous']) {
+                    $this->logger->info('API request to /task/progress', $data);
+                } else {
+                    $this->logger->debug('API request to /task/progress', $data);
+                }
             } else {
-                $this->logger->debug('API Request to /task/progress', $data);
+                $this->logger->info('API request to /task/progress failed', $loggingData);
             }
         } else {
             // when not on /task/progress
             if ($code >= 200 && $code < 400) {
-                $this->logger->debug('API Request', $loggingData);
+                $this->logger->debug('API request', $loggingData);
             } else {
-                $this->logger->info('API Request Failed', $loggingData);
+                $this->logger->info('API request failed', $loggingData);
             }
         }
 
