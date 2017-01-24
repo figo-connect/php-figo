@@ -23,10 +23,21 @@
 
 namespace figo;
 
+use Psr\Log\LoggerInterface;
+
 /**
  * HTTPS request class with certificate authentication and enhanced error handling
  */
 class HttpsRequest {
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
 
     /**
      * Send client request and return server response.
@@ -83,6 +94,38 @@ class HttpsRequest {
         preg_match("/ (\d+)/", $response, $code);
         $code = intval($code[1]);
         $body = substr($response, strpos($response, "\r\n\r\n") + 4);
+
+
+        //doing some logging
+        $responseArray = json_decode($body, true);
+        $loggingData = array(
+            'path' => $path,
+            'data' => $data,
+            'method' => $method,
+            'headers' => $headers,
+            'response' => array(
+                'status' => $code,
+                'body' => $responseArray
+            )
+        );
+
+        if ($path === '/task/progress') {
+            // when on /task/progress
+            $data = array_merge($loggingData, ['task_id' => $responseArray['task_id']]);
+            if($responseArray['is_erronous']) {
+                $this->logger->info('API Request to /task/progress', $data);
+            } else {
+                $this->logger->debug('API Request to /task/progress', $data);
+            }
+        } else {
+            // when not on /task/progress
+            if ($code >= 200 && $code < 400) {
+                $this->logger->debug('API Request', $loggingData);
+            } else {
+                $this->logger->info('API Request Failed', $loggingData);
+            }
+        }
+
 
         // Evaluate HTTP response.
         if ($code >= 200 && $code < 300) {

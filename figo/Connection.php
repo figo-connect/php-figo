@@ -23,12 +23,17 @@
 
 namespace figo;
 
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 /**
  * Represents a non user-bound connection to the figo Connect API
  */
 class Connection {
-
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
     private $client_id;
     private $client_secret;
     private $redirect_uri;
@@ -44,6 +49,17 @@ class Connection {
         $this->client_id = $client_id;
         $this->client_secret = $client_secret;
         $this->redirect_uri = $redirect_uri;
+        $this->logger = new NullLogger();
+    }
+
+    /**
+     * Set Logger
+     *
+     * @param LoggerInterface $logger
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
     }
 
     /**
@@ -69,7 +85,7 @@ class Connection {
                         "Content-Type"   => $content_type,
                          "Content-Length" => strlen($data));
 
-        $request = new HttpsRequest();
+        $request = new HttpsRequest($this->logger);
         return $request->request($path, $data, $method, $headers);
     }
 

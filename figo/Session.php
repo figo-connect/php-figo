@@ -23,12 +23,17 @@
 
 namespace figo;
 
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 /**
  * Represents a user-bound connection to the figo Connect API and allows access to the user's data
  */
 class Session {
-
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
     private $access_token;
 
     /**
@@ -38,6 +43,17 @@ class Session {
      */
     public function __construct($access_token) {
         $this->access_token = $access_token;
+        $this->logger = new NullLogger();
+    }
+
+    /**
+     * Set Logger
+     *
+     * @param LoggerInterface $logger
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
     }
 
     /**
@@ -55,7 +71,8 @@ class Session {
                          "Content-Type"   => "application/json",
                          "Content-Length" => strlen($data));
 
-        $request = new HttpsRequest();
+        $request = new HttpsRequest($this->logger);
+
         return $request->request($path, $data, $method, $headers);
     }
 
