@@ -33,10 +33,20 @@ class HttpsRequest {
      * @var LoggerInterface
      */
     protected $logger;
+    /**
+     * @var string
+     */
+    private $apiEndpoint;
+    /**
+     * @var array
+     */
+    private $fingerprints;
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct($apiEndpoint, array $fingerprints, LoggerInterface $logger)
     {
         $this->logger = $logger;
+        $this->apiEndpoint = $apiEndpoint;
+        $this->fingerprints = $fingerprints;
     }
 
     /**
@@ -56,7 +66,7 @@ class HttpsRequest {
         stream_context_set_option($context, "ssl", "verify_peer", true);
         stream_context_set_option($context, "ssl", "capture_peer_cert", true);
 
-        $fp = stream_socket_client("tlsv1.2://".Config::$API_ENDPOINT.":443/", $errno, $errstr, 60, STREAM_CLIENT_CONNECT, $context);
+        $fp = stream_socket_client("tlsv1.2://". $this->apiEndpoint .":443/", $errno, $errstr, 60, STREAM_CLIENT_CONNECT, $context);
         if (!$fp) {
             throw new Exception("socket_error", $errstr);
         }
@@ -69,7 +79,7 @@ class HttpsRequest {
             openssl_x509_export($certificate, $certificate);
             $fingerprint = sha1(base64_decode(preg_replace("/-.*/", "", $certificate)));
             $fingerprint = implode(":", str_split(strtoupper($fingerprint), 2));
-            if (!in_array($fingerprint, Config::$VALID_FINGERPRINTS)) {
+            if (!in_array($fingerprint, $this->fingerprints)) {
                 fclose($fp);
                 throw new Exception("ssl_error", "SSL/TLS certificate fingerprint mismatch.");
             }
