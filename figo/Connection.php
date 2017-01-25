@@ -125,10 +125,17 @@ class Connection {
      *
      * @return array
      */
-    public function get_supported_payment_services($service=null) {
+    public function get_supported_payment_services($service=null, $countryCode = null) {
         switch ($service) {
             case "banks":
-                $response = $this->query_api("/catalog/banks", null, "GET");
+
+                $url = '/catalog/banks';
+
+                if($countryCode) {
+                    $url = $url . '/' . $countryCode;
+                }
+
+                $response = $this->query_api($url, null, "GET");
                 break;
             case "services":
                 $response = $this->query_api("/catalog/services", null, "GET");
