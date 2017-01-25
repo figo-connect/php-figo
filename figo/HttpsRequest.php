@@ -78,7 +78,7 @@ class HttpsRequest {
         // Setup common HTTP headers.
         $headers["Host"] = Config::$API_ENDPOINT;
         $headers["Accept"] = "application/json";
-        $headers["User-Agent"] = "php-figo";
+        $headers["User-Agent"] = Config::$USER_AGENT . '/' . Config::$SDK_VERSION;
         $headers["Connection"] = "close";
 
         // Send client request.
