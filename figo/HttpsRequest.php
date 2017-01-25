@@ -122,7 +122,7 @@ class HttpsRequest {
         if ($path === '/task/progress') {
             // when on /task/progress
             if ($code >= 200 && $code < 400) {
-                $data = array_merge($loggingData, ['task_id' => $responseArray['task_id']]);
+                $data = array_merge($loggingData, array('task_id' => $responseArray['task_id']));
                 if($responseArray['is_erronous']) {
                     $this->logger->info('API request to /task/progress', $data);
                 } else {
