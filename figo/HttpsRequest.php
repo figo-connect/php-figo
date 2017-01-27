@@ -119,11 +119,11 @@ class HttpsRequest {
             )
         );
 
-        if ($path === '/task/progress') {
+        if (strpos($path, '/task/progress') !== false) {
             // when on /task/progress
             if ($code >= 200 && $code < 400) {
-                $data = array_merge($loggingData, array('task_id' => $responseArray['task_id']));
-                if($responseArray['is_erronous']) {
+                $data = array_merge($loggingData, array('task_id' => explode('/task/progress?id=', $path)[1]));
+                if($responseArray['is_erroneous']) {
                     $this->logger->info('API request to /task/progress', $data);
                 } else {
                     $this->logger->debug('API request to /task/progress', $data);
