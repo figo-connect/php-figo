@@ -158,7 +158,6 @@ class HttpsRequest {
                 return null;
             } elseif ($code >= 400 && $code < 500) {
                 throw new Exception($obj["error"]["name"] .":". $obj["error"]["message"]." (Error-Code: ".$obj["error"]["code"].")" , $obj["error"]["description"]);
-                //throw new Exception("foo", "bar");
             } elseif ($code === 503) {
                 throw new Exception("service_unavailable", "Exceeded rate limit.");
             } else {
