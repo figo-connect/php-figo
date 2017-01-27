@@ -205,6 +205,29 @@ class Session {
     }
 
     /**
+     * Add an account
+     *
+     * @param $country
+     * @param $credentials
+     * @param $bank_code
+     * @param $iban
+     * @param $save_pin
+     * @return Account|null
+     */
+    public function add_account($country, $credentials, $bank_code, $iban, $save_pin)
+    {
+        $data = ["country" => $country, "credentials" => $credentials];
+        if ($iban) {
+            $data["iban"] = $iban;
+        } else if ($bank_code) {
+            $data["bank_code"] = $bank_code;
+        }
+        $data["save_pin"] = (is_bool($save_pin)) ? $save_pin : false;
+        $response = $this->query_api("/rest/accounts", $data, "POST");
+        return (is_null($response) ? null : new Account($this, $response));
+    }
+
+    /**
      * Modify an account
      *
      * @param Account the modified account to be saved
