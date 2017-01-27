@@ -145,33 +145,25 @@ class HttpsRequest {
         if ($code >= 200 && $code < 300) {
             if (strlen($body) === 0) {
                 return array();
-            } else {
-                $obj = json_decode($body, true);
-                if (is_null($obj)) {
-                    throw new Exception("json_error", "Cannot decode JSON object.");
-                } else {
-                    return $obj;
-                }
-             }
-        } elseif ($code === 400) {
-             $err = json_decode($body, true);
-             if (is_null($err)) {
-                 throw new Exception("json_error", "Cannot decode JSON object.");
-             } else {
-                 throw new Exception($err["error"]["name"] .":". $err["error"]["message"]." (Error-Code: ".$err["error"]["code"].")" , $err["error"]["description"]);
-             }
-        } elseif ($code === 401) {
-            throw new Exception("unauthorized", "Missing, invalid or expired access token.");
-        } elseif ($code === 403) {
-            throw new Exception("forbidden", "Insufficient permission.");
-        } elseif ($code === 404) {
-            return null;
-        } elseif ($code === 405) {
-            throw new Exception("method_not_allowed", "Unexpected request method.");
-        } elseif ($code === 503) {
-            throw new Exception("service_unavailable", "Exceeded rate limit.");
+            }
+        }
+
+        $obj = json_decode($body, true);
+        if (is_null($obj)) {
+            throw new Exception("json_error", "Cannot decode JSON object.");
         } else {
-            throw new Exception("internal_server_error", "We are very sorry, but something went wrong.");
+            if ($code >= 200 && $code < 300) {
+                return $obj;
+            } elseif ($code === 404) {
+                return null;
+            } elseif ($code >= 400 && $code < 500) {
+                throw new Exception($obj["error"]["name"] .":". $obj["error"]["message"]." (Error-Code: ".$obj["error"]["code"].")" , $obj["error"]["description"]);
+                //throw new Exception("foo", "bar");
+            } elseif ($code === 503) {
+                throw new Exception("service_unavailable", "Exceeded rate limit.");
+            } else {
+                throw new Exception("internal_server_error", "We are very sorry, but something went wrong.");
+            }
         }
     }
 }
