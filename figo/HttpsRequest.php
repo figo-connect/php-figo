@@ -104,10 +104,9 @@ class HttpsRequest {
         preg_match("/ (\d+)/", $response, $code);
         $code = intval($code[1]);
         $body = substr($response, strpos($response, "\r\n\r\n") + 4);
-
-
-        //doing some logging
+        
         $responseArray = json_decode($body, true);
+
         $loggingData = array(
             'path' => $path,
             'data' => $data,
@@ -119,50 +118,72 @@ class HttpsRequest {
             )
         );
 
-        if (strpos($path, '/task/progress') !== false) {
-            // when on /task/progress
-            if ($code >= 200 && $code < 400) {
-                $data = array_merge($loggingData, array('task_id' => explode('/task/progress?id=', $path)[1]));
-                if($responseArray['is_erroneous']) {
-                    $this->logger->info('API request to /task/progress', $data);
-                } else {
-                    $this->logger->debug('API request to /task/progress', $data);
-                }
-            } else {
-                $this->logger->info('API request to /task/progress failed', $loggingData);
-            }
-        } else {
-            // when not on /task/progress
-            if ($code >= 200 && $code < 400) {
-                $this->logger->debug('API request', $loggingData);
-            } else {
-                $this->logger->info('API request failed', $loggingData);
-            }
-        }
-
 
         // Evaluate HTTP response.
         if ($code >= 200 && $code < 300) {
             if (strlen($body) === 0) {
+                $this->logSuccessfulRequest($path, $responseArray, $loggingData);
                 return array();
             }
+
+            if (is_null($responseArray)) {
+                $this->logFailedRequest($path, $responseArray, $loggingData);
+                throw new Exception("json_error", "Cannot decode JSON object.");
+            }
+
+            $this->logSuccessfulRequest($path, $responseArray, $loggingData);
+            return $responseArray;
         }
 
-        $obj = json_decode($body, true);
-        if (is_null($obj)) {
+        if (is_null($responseArray)) {
+            $this->logFailedRequest($path, $responseArray, $loggingData);
             throw new Exception("json_error", "Cannot decode JSON object.");
-        } else {
-            if ($code >= 200 && $code < 300) {
-                return $obj;
-            } elseif ($code === 404) {
-                return null;
-            } elseif ($code >= 400 && $code < 500) {
-                throw new Exception($obj["error"]["name"] .":". $obj["error"]["message"]." (Error-Code: ".$obj["error"]["code"].")" , $obj["error"]["description"]);
-            } elseif ($code === 503) {
-                throw new Exception("service_unavailable", "Exceeded rate limit.");
+        }
+
+        if ($code === 404) {
+            $this->logFailedRequest($path, $responseArray, $loggingData);
+            return null;
+        }
+
+        if ($code >= 400 && $code < 500) {
+            $this->logFailedRequest($path, $responseArray, $loggingData);
+            throw new Exception($responseArray["error"]["name"] .":". $responseArray["error"]["message"]." (Error-Code: ".$responseArray["error"]["code"].")" , $responseArray["error"]["description"]);
+        }
+
+        if ($code === 503) {
+            $this->logFailedRequest($path, $responseArray, $loggingData);
+            throw new Exception("service_unavailable", "Exceeded rate limit.");
+        }
+
+        throw new Exception("internal_server_error", "We are very sorry, but something went wrong.");
+
+    }
+
+    protected function logSuccessfulRequest($path, $response, $data)
+    {
+        if (strpos($path, '/task/progress') !== false) {
+            // when on /task/progress
+            $data = array_merge($data, array('task_id' => explode('/task/progress?id=', $path)[1]));
+            if($response['is_erroneous']) {
+                $this->logger->info('API request to /task/progress', $data);
             } else {
-                throw new Exception("internal_server_error", "We are very sorry, but something went wrong.");
+                $this->logger->debug('API request to /task/progress', $data);
             }
+
+        } else {
+            // when not on /task/progress
+            $this->logger->debug('API request', $data);
+        }
+    }
+
+    protected function logFailedRequest($path, $response, $data)
+    {
+        if (strpos($path, '/task/progress') !== false) {
+            // when on /task/progress
+            $this->logger->info('API request to /task/progress failed', $data);
+        } else {
+            // when not on /task/progress
+            $this->logger->info('API request failed', $data);
         }
     }
 }
