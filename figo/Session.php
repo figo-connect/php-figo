@@ -384,6 +384,24 @@ class Session {
 
 
     /**
+     * Start a synchronization task and return its token id
+     *
+     * @param string the user will be redirected to this URL after the process completes
+     * @param string this string will be passed on through the complete synchronization process
+     *        and to the redirect target at the end. It should be used to validated the authenticity of
+     *        the call to the redirect URL
+     * @return string the token id of the taks
+     */
+    public function start_sync($redirect_uri, $state) {
+        $data = array("redirect_uri" => $redirect_uri, "state" => $state);
+        $response = $this->query_api("/rest/sync", $data, "POST");
+        return $response["task_token"];
+    }
+
+
+
+
+    /**
      * Retrieve all notifications
      *
      * @return array an array of <code>Notification</code> objects, one for each registered notification
