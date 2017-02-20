@@ -216,7 +216,7 @@ class Session {
      */
     public function add_account($country, $credentials, $bank_code, $iban, $save_pin)
     {
-        $data = ["country" => $country, "credentials" => $credentials];
+        $data = array("country" => $country, "credentials" => $credentials);
         if ($iban) {
             $data["iban"] = $iban;
         } else if ($bank_code) {
