@@ -35,6 +35,14 @@ class Config {
     /** @var string figo Connect SSL/TLS certificate fingerprints */
     public static $VALID_FINGERPRINTS = array("38:AE:4A:32:6F:16:EA:15:81:33:8B:B0:D8:E4:A6:35:E7:27:F1:07",
                                               "DB:E2:E9:15:8F:C9:90:30:84:FE:36:CA:A6:11:38:D8:5A:20:5D:93");
+    /**
+     * @var string User agent used for API requests
+     */
+    public static $USER_AGENT = 'php_figo';
+    /**
+     * @var string Version of this SDK, used in user agent for API requests
+     */
+    public static $SDK_VERSION = 'v1.1.4';
 }
 
 ?>

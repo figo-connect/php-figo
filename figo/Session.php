@@ -23,21 +23,59 @@
 
 namespace figo;
 
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 /**
  * Represents a user-bound connection to the figo Connect API and allows access to the user's data
  */
 class Session {
-
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
     private $access_token;
+    /**
+     * @var null API endpoint
+     */
+    private $apiEndpoint;
+    /**
+     * @var array Fingerprints for API endpoint
+     */
+    private $fingerprints;
 
     /**
      * Constructor
      *
      * @param string the access token
+     * @param string $apiEndpoint Custom API endpoint
+     * @param array $fingerprints Fingerprints for custom API endpoint
      */
-    public function __construct($access_token) {
+    public function __construct($access_token, $apiEndpoint = null, array $fingerprints = null) {
+        // set default values
+        $this->logger = new NullLogger();
+        $this->apiEndpoint = Config::$API_ENDPOINT;
+        $this->fingerprints = Config::$VALID_FINGERPRINTS;
+
         $this->access_token = $access_token;
+
+        if ($apiEndpoint) {
+            $this->apiEndpoint = $apiEndpoint;
+        }
+
+        if ($fingerprints) {
+            $this->fingerprints = $fingerprints;
+        }
+    }
+
+    /**
+     * Set Logger
+     *
+     * @param LoggerInterface $logger
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
     }
 
     /**
@@ -55,7 +93,8 @@ class Session {
                          "Content-Type"   => "application/json",
                          "Content-Length" => strlen($data));
 
-        $request = new HttpsRequest();
+        $request = new HttpsRequest($this->apiEndpoint, $this->fingerprints, $this->logger);
+
         return $request->request($path, $data, $method, $headers);
     }
 
@@ -162,6 +201,29 @@ class Session {
      */
     public function get_account($account_id) {
         $response = $this->query_api("/rest/accounts/".$account_id);
+        return (is_null($response) ? null : new Account($this, $response));
+    }
+
+    /**
+     * Add an account
+     *
+     * @param $country
+     * @param $credentials
+     * @param $bank_code
+     * @param $iban
+     * @param $save_pin
+     * @return Account|null
+     */
+    public function add_account($country, $credentials, $bank_code, $iban, $save_pin)
+    {
+        $data = array("country" => $country, "credentials" => $credentials);
+        if ($iban) {
+            $data["iban"] = $iban;
+        } else if ($bank_code) {
+            $data["bank_code"] = $bank_code;
+        }
+        $data["save_pin"] = (is_bool($save_pin)) ? $save_pin : false;
+        $response = $this->query_api("/rest/accounts", $data, "POST");
         return (is_null($response) ? null : new Account($this, $response));
     }
 

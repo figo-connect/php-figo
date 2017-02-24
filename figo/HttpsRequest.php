@@ -23,10 +23,31 @@
 
 namespace figo;
 
+use Psr\Log\LoggerInterface;
+
 /**
  * HTTPS request class with certificate authentication and enhanced error handling
  */
 class HttpsRequest {
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+    /**
+     * @var string
+     */
+    private $apiEndpoint;
+    /**
+     * @var array
+     */
+    private $fingerprints;
+
+    public function __construct($apiEndpoint, array $fingerprints, LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+        $this->apiEndpoint = $apiEndpoint;
+        $this->fingerprints = $fingerprints;
+    }
 
     /**
      * Send client request and return server response.
@@ -45,7 +66,7 @@ class HttpsRequest {
         stream_context_set_option($context, "ssl", "verify_peer", true);
         stream_context_set_option($context, "ssl", "capture_peer_cert", true);
 
-        $fp = stream_socket_client("tlsv1.2://".Config::$API_ENDPOINT.":443/", $errno, $errstr, 60, STREAM_CLIENT_CONNECT, $context);
+        $fp = stream_socket_client("tlsv1.2://". $this->apiEndpoint .":443/", $errno, $errstr, 60, STREAM_CLIENT_CONNECT, $context);
         if (!$fp) {
             throw new Exception("socket_error", $errstr);
         }
@@ -58,7 +79,7 @@ class HttpsRequest {
             openssl_x509_export($certificate, $certificate);
             $fingerprint = sha1(base64_decode(preg_replace("/-.*/", "", $certificate)));
             $fingerprint = implode(":", str_split(strtoupper($fingerprint), 2));
-            if (!in_array($fingerprint, Config::$VALID_FINGERPRINTS)) {
+            if (!in_array($fingerprint, $this->fingerprints)) {
                 fclose($fp);
                 throw new Exception("ssl_error", "SSL/TLS certificate fingerprint mismatch.");
             }
@@ -67,7 +88,7 @@ class HttpsRequest {
         // Setup common HTTP headers.
         $headers["Host"] = Config::$API_ENDPOINT;
         $headers["Accept"] = "application/json";
-        $headers["User-Agent"] = "php-figo";
+        $headers["User-Agent"] = Config::$USER_AGENT . '/' . Config::$SDK_VERSION;
         $headers["Connection"] = "close";
 
         // Send client request.
@@ -83,38 +104,86 @@ class HttpsRequest {
         preg_match("/ (\d+)/", $response, $code);
         $code = intval($code[1]);
         $body = substr($response, strpos($response, "\r\n\r\n") + 4);
+        
+        $responseArray = json_decode($body, true);
+
+        $loggingData = array(
+            'path' => $path,
+            'data' => $data,
+            'method' => $method,
+            'headers' => $headers,
+            'response' => array(
+                'status' => $code,
+                'body' => $responseArray
+            )
+        );
+
 
         // Evaluate HTTP response.
         if ($code >= 200 && $code < 300) {
             if (strlen($body) === 0) {
+                $this->logSuccessfulRequest($path, $responseArray, $loggingData);
                 return array();
-            } else {
-                $obj = json_decode($body, true);
-                if (is_null($obj)) {
-                    throw new Exception("json_error", "Cannot decode JSON object.");
-                } else {
-                    return $obj;
-                }
-             }
-        } elseif ($code === 400) {
-             $err = json_decode($body, true);
-             if (is_null($err)) {
-                 throw new Exception("json_error", "Cannot decode JSON object.");
-             } else {
-                 throw new Exception($err["error"]["name"] .":". $err["error"]["message"]." (Error-Code: ".$err["error"]["code"].")" , $err["error"]["description"]);
-             }
-        } elseif ($code === 401) {
-            throw new Exception("unauthorized", "Missing, invalid or expired access token.");
-        } elseif ($code === 403) {
-            throw new Exception("forbidden", "Insufficient permission.");
-        } elseif ($code === 404) {
+            }
+
+            if (is_null($responseArray)) {
+                $this->logFailedRequest($path, $responseArray, $loggingData);
+                throw new Exception("json_error", "Cannot decode JSON object.");
+            }
+
+            $this->logSuccessfulRequest($path, $responseArray, $loggingData);
+            return $responseArray;
+        }
+
+        if (is_null($responseArray)) {
+            $this->logFailedRequest($path, $responseArray, $loggingData);
+            throw new Exception("json_error", "Cannot decode JSON object.");
+        }
+
+        if ($code === 404) {
+            $this->logFailedRequest($path, $responseArray, $loggingData);
             return null;
-        } elseif ($code === 405) {
-            throw new Exception("method_not_allowed", "Unexpected request method.");
-        } elseif ($code === 503) {
+        }
+
+        if ($code >= 400 && $code < 500) {
+            $this->logFailedRequest($path, $responseArray, $loggingData);
+            throw new Exception($responseArray["error"]["name"] .":". $responseArray["error"]["message"]." (Error-Code: ".$responseArray["error"]["code"].")" , $responseArray["error"]["description"]);
+        }
+
+        if ($code === 503) {
+            $this->logFailedRequest($path, $responseArray, $loggingData);
             throw new Exception("service_unavailable", "Exceeded rate limit.");
+        }
+
+        throw new Exception("internal_server_error", "We are very sorry, but something went wrong.");
+
+    }
+
+    protected function logSuccessfulRequest($path, $response, $data)
+    {
+        if (strpos($path, '/task/progress') !== false) {
+            // when on /task/progress
+            $data = array_merge($data, array('task_id' => explode('/task/progress?id=', $path)[1]));
+            if($response['is_erroneous']) {
+                $this->logger->info('API request to /task/progress', $data);
+            } else {
+                $this->logger->debug('API request to /task/progress', $data);
+            }
+
         } else {
-            throw new Exception("internal_server_error", "We are very sorry, but something went wrong.");
+            // when not on /task/progress
+            $this->logger->debug('API request', $data);
+        }
+    }
+
+    protected function logFailedRequest($path, $response, $data)
+    {
+        if (strpos($path, '/task/progress') !== false) {
+            // when on /task/progress
+            $this->logger->info('API request to /task/progress failed', $data);
+        } else {
+            // when not on /task/progress
+            $this->logger->info('API request failed', $data);
         }
     }
 }

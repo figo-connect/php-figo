@@ -44,7 +44,7 @@ class Exception extends \Exception {
     public function __construct($error, $error_description) {
         $this->error = $error;
         $this->error_description = $error_description;
-        parent::__construct($error_description);
+        parent::__construct($error . ', ' . $error_description);
     }
 
     /**
