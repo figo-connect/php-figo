@@ -27,7 +27,7 @@ use figo\Notification;
 use figo\Payment;
 
 
-class FigoTest extends PHPUnit_Framework_TestCase {
+class SessionTest extends PHPUnit_Framework_TestCase {
 
     protected $sut;
 
@@ -167,5 +167,35 @@ class FigoTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(100.00, $standing_order[0]->amount);
     }
 
+    public function test_setup_bank_account() {
+        $response = $this->sut->setup_bank_account(
+            "90090042", ["demo", "demo"],
+            ["country" => "de", "save_pin" => true]
+        );
+        $this->assertTrue(isset($response["task_token"]));
+    }
+
+}
+
+
+class ConnectionTest extends PHPUnit_Framework_TestCase {
+
+    protected $sut;
+
+    protected function setUp() {
+        $this->sut = new Connection("CaESKmC8MAhNpDe5rvmWnSkRE_7pkkVIIgMwclgzGcQY", "STdzfv0GXtEj_bwYn7AgCVszN1kKq5BdgEIKOM_fzybQ");
+    }
+
+    public function test_native_login() {
+        $response = $this->sut->native_client_login("demo@figo.me", "demo1234");
+        $access_token = $response["access_token"];
+        $session = new Session($access_token);
+        try {
+            $this->assertEquals([], $session->get_accounts());
+        } finally {
+            $session->remove_user();
+        }
+
+    }
 }
 ?>

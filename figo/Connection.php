@@ -195,6 +195,20 @@ class Connection {
         return $this->query_api("/auth/token", $data);
     }
 
+    /**
+     * Native client login with figo Account credentials.
+     *
+     * @param string the figo Account email address
+     * @param string the figo Account password
+     * @param string scope of data access to ask the user for, e.g. <code>accounts=ro</code>
+     * @return array associative array with the keys <code>access_token</code>, <code>refresh_token</code>
+     *         and <code>expires</code>, as documented in the figo Connect API specification
+     */
+    public function native_client_login($username, $password, $scope = null) {
+        $data = array("grant_type" => "password", "username" => $username, "password" => $password, "scope" => $scope);
+        return $this->query_api("/auth/token", $data);
+    }
+
 
     /**
      * Revoke refresh token or access token.
