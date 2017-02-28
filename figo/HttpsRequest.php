@@ -77,7 +77,7 @@ class HttpsRequest {
         if (isset($options["ssl"]) && isset($options["ssl"]["peer_certificate"])) {
             $certificate = $options["ssl"]["peer_certificate"];
             openssl_x509_export($certificate, $certificate);
-            $fingerprint = sha1(base64_decode(preg_replace("/-.*/", "", $certificate)));
+            $fingerprint = hash("sha256", base64_decode(preg_replace("/-.*/", "", $certificate)));
             $fingerprint = implode(":", str_split(strtoupper($fingerprint), 2));
             if (!in_array($fingerprint, $this->fingerprints)) {
                 fclose($fp);
