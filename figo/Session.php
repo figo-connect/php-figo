@@ -308,8 +308,8 @@ class Session {
      * @param string $sort              Determine whether results will be sorted in ascending or descending order.
      * @return array an array of <code>Transaction</code> objects, one for each transaction of the user
      */
-    public function get_transactions($account_id = null, $since = null, $count = 1000, $offset = 0, $include_pending = false, $sort = 'desc') {
-        $data = array("count" => $count, "offset" => $offset, "include_pending" => $include_pending ? "1" : "0", "sort" => $sort);
+    public function get_transactions($account_id = null, $since = null, $count = 1000, $offset = 0, $include_pending = false, $sort = 'desc', $cents=false) {
+        $data = array("count" => $count, "offset" => $offset, "include_pending" => $include_pending ? "1" : "0", "sort" => $sort, 'cents' => $cents);
         if (!is_null($since))
             $data["since"] = is_a($since, "\DateTime") ? $since->format("Y-m-d") : $since;
 
