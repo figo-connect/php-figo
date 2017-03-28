@@ -50,6 +50,11 @@ class Base {
                 $this->$key = new AccountBalance($session, $value);
             } elseif (substr($key, -5) === "_date" || substr($key, -10) === "_timestamp") {
                 $this->$key = new \DateTime($value, new \DateTimeZone("UTC"));
+            } elseif ($key === "categories" && is_array($value)) {
+                $this->$key = [];
+                foreach ($value as $category) {
+                    $this->$key[] = new Category($session, $category);
+                }
             } else {
                 $this->$key = $value;
             }

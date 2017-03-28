@@ -84,6 +84,9 @@ class Transaction extends Base {
 
     /** @var array Contains additional information for PayPal transactions */
     public $additional_info;
+
+    /** @var  Category[]*/
+    public $categories;
 }
 
 ?>
