@@ -309,7 +309,11 @@ class Session {
      * @return array an array of <code>Transaction</code> objects, one for each transaction of the user
      */
     public function get_transactions($account_id = null, $since = null, $count = 1000, $offset = 0, $include_pending = false, $sort = 'desc', $cents=false) {
-        $data = array("count" => $count, "offset" => $offset, "include_pending" => $include_pending ? "1" : "0", "sort" => $sort, 'cents' => $cents);
+        $data = array("count" => $count, "offset" => $offset, "include_pending" => $include_pending ? "1" : "0", "sort" => $sort);
+        if ($cents) {
+            $data["cents"] = true;
+        }
+
         if (!is_null($since))
             $data["since"] = is_a($since, "\DateTime") ? $since->format("Y-m-d") : $since;
 
