@@ -53,7 +53,7 @@ class Base {
             } elseif ($key === "categories" && is_array($value)) {
                 $this->$key = [];
                 foreach ($value as $category) {
-                    $this->$key[] = new Category($session, $category);
+                    $this->{$key}[] = new Category($session, $category);
                 }
             } else {
                 $this->$key = $value;
