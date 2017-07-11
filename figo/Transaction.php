@@ -87,6 +87,39 @@ class Transaction extends Base {
 
     /** @var  Category[]*/
     public $categories;
+
+    /** @var string BIC */
+    public $bic;
+
+    /** @var string IBAN */
+    public $iban;
+
+    /** @var string Booking key */
+    public $booking_key;
+
+    /** @var string Creditor ID */
+    public $creditor_id;
+
+    /** @var string Mandate reference */
+    public $mandate_reference;
+
+    /** @var string SEPA purpose code */
+    public $sepa_purpose_code;
+
+    /** @var string SEPA remittance info */
+    public $sepa_remittance_info;
+
+    /** @var string Text key addition */
+    public $text_key_addition;
+
+    /** @var string End to end reference */
+    public $end_to_end_reference;
+
+    /** @var string Customer reference */
+    public $customer_reference;
+
+    /** @var int Prima nota number */
+    public $prima_nota_number;
 }
 
 ?>
