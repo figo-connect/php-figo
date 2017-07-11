@@ -42,7 +42,7 @@ class Config {
     /**
      * @var string Version of this SDK, used in user agent for API requests
      */
-    public static $SDK_VERSION = 'v1.1.10';
+    public static $SDK_VERSION = '1.2.0';
 }
 
 ?>
