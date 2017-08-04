@@ -53,7 +53,7 @@ class Exception extends \Exception {
      * @return string the error description
      */
     public function __toString() {
-        return $this->error_description."\n";
+        return $this->error . ', ' . $this->error_description."\n";
     }
 }
 
