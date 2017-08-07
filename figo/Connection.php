@@ -94,7 +94,7 @@ class Connection {
      *
      * @return array JSON response
      */
-    public function query_api($path, array $data = null, $method='POST', $encode='http_build_query') {
+    public function query_api($path, array $data = null, $method='POST', $encode='http_build_query', $language = 'de') {
         if ($encode != 'http_build_query') {
             $data = is_null($data) ? "" : json_encode($data);
             $content_type = "application/json";
@@ -108,7 +108,7 @@ class Connection {
                          "Content-Length" => strlen($data));
 
         $request = new HttpsRequest($this->apiEndpoint, $this->fingerprints, $this->logger);
-        return $request->request($path, $data, $method, $headers);
+        return $request->request($path, $data, $method, $headers, $language);
     }
 
     /**
@@ -147,7 +147,7 @@ class Connection {
      *
      * @return array
      */
-    public function get_supported_payment_services($service=null, $countryCode = null) {
+    public function get_supported_payment_services($service=null, $countryCode = null, $language = 'de') {
         switch ($service) {
             case "banks":
 
@@ -157,13 +157,13 @@ class Connection {
                     $url = $url . '/' . $countryCode;
                 }
 
-                $response = $this->query_api($url, null, "GET");
+                $response = $this->query_api($url, null, "GET", "http_build_query", $language);
                 break;
             case "services":
-                $response = $this->query_api("/catalog/services", null, "GET");
+                $response = $this->query_api("/catalog/services", null, "GET", "http_build_query", $language);
                 break;
             default:
-                $response = $this->query_api("/catalog", null, "GET");
+                $response = $this->query_api("/catalog", null, "GET", "http_build_query", $language);
         }
         return $response;
     }
