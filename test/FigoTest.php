@@ -183,7 +183,13 @@ class ConnectionTest extends PHPUnit_Framework_TestCase {
     protected $sut;
 
     protected function setUp() {
-        $this->sut = new Connection("CaESKmC8MAhNpDe5rvmWnSkRE_7pkkVIIgMwclgzGcQY", "STdzfv0GXtEj_bwYn7AgCVszN1kKq5BdgEIKOM_fzybQ");
+        $this->sut = new Connection(
+            getenv('FIGO_CLIENT_ID'),
+            getenv('FIGO_CLIENT_SECRET'),
+            "http://my-domain.org/redirect-url",
+            getenv('FIGO_API_ENDPOINT'),
+            explode(',', getenv('FIGO_SSL_FINGERPRINT'))
+        );
     }
 
     public function test_native_login() {
@@ -196,6 +202,13 @@ class ConnectionTest extends PHPUnit_Framework_TestCase {
             $session->remove_user();
         }
 
+    }
+
+    public function test_credentials_login()
+    {
+        $response = $this->sut->credential_login('php.sdk.testing@figo.io', 'phpsdk');
+        $this->assertNotEmpty($response);
+        $this->assertNotNull($response['access_token']);
     }
 }
 ?>
