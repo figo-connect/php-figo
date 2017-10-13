@@ -156,6 +156,7 @@ class HttpsRequest {
             throw new Exception("service_unavailable", "Exceeded rate limit.");
         }
 
+        $this->logFailedRequest($path, $responseArray, $loggingData);
         throw new Exception("internal_server_error", "We are very sorry, but something went wrong.");
 
     }
