@@ -52,6 +52,11 @@ class Task extends Base {
     /** @var float Monetary value in account currency */
     public $challenge;
 
+    /** @var array Events */
+    public $events;
+
+    /** @var array Schedule */
+    public $schedule;
 }
 
 ?>

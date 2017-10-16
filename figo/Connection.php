@@ -192,7 +192,7 @@ class Connection {
         } else {
             throw new Exception("invalid_token", "invalid code/token");
         }
-        return $this->query_api("/auth/token", $data);
+        return $this->query_api("/auth/token", $data, "POST", "json_encode");
     }
 
     /**
@@ -206,7 +206,7 @@ class Connection {
      */
     public function native_client_login($username, $password, $scope = null) {
         $data = array("grant_type" => "password", "username" => $username, "password" => $password, "scope" => $scope);
-        return $this->query_api("/auth/token", $data);
+        return $this->query_api("/auth/token", $data, "POST", "json_encode");
     }
 
 
@@ -219,7 +219,7 @@ class Connection {
      */
     public function revoke_token($refresh_token_or_access_token) {
         $data = array("token" => $refresh_token_or_access_token);
-        $this->query_api("/auth/revoke?".http_build_query($data));
+        $this->query_api("/auth/revoke", $data, "POST", "json_encode");
     }
 
     /**
@@ -271,7 +271,7 @@ class Connection {
      */
     public function create_user($name, $email, $password, $language='de') {
         $data = array('name' => $name, 'email' => $email, 'password' => $password, 'language' => $language, 'affiliate_client_id' => $this->client_id);
-        $response = $this->query_api("/auth/user", $data);
+        $response = $this->query_api("/auth/user", $data, "POST", "json_encode");
         return $response["recovery_password"];
     }
 
@@ -297,7 +297,7 @@ class Connection {
             $options["device_udid"] = $device_udid;
         if ($scope)
             $options["scope"] = $scope;
-        return $this->query_api("/auth/token", $options, "POST");
+        return $this->query_api("/auth/token", $options, "POST", "json_encode");
     }
 
 
