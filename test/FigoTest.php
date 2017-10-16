@@ -180,6 +180,7 @@ class SessionTest extends PHPUnit_Framework_TestCase {
 
 class ConnectionTest extends PHPUnit_Framework_TestCase {
 
+    /** @var  Connection */
     protected $sut;
 
     protected function setUp() {
@@ -209,6 +210,29 @@ class ConnectionTest extends PHPUnit_Framework_TestCase {
         $response = $this->sut->credential_login('php.sdk.testing@figo.io', 'phpsdk');
         $this->assertNotEmpty($response);
         $this->assertNotNull($response['access_token']);
+    }
+
+    public function test_catalog_language_is_german_by_default()
+    {
+        $result = $this->sut->get_supported_payment_services();
+
+        $this->assertEquals('de', $result['banks'][0]['language']['current_language']);
+    }
+
+    public function test_catalog_language_can_be_set_to_english()
+    {
+        $result = $this->sut->get_supported_payment_services(null, null, 'en');
+
+        $this->assertEquals('en', $result['banks'][0]['language']['current_language']);
+    }
+
+    public function test_catalog_throws_exception_on_unsupported_language()
+    {
+        $this->setExpectedException(
+            \figo\Exception::class, 'Not Acceptable: Unsupported language (Status: 406), '
+        );
+
+        $this->sut->get_supported_payment_services(null, null, 'fr');
     }
 }
 ?>

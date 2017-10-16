@@ -59,7 +59,7 @@ class HttpsRequest {
      * @return array JSON response
      * @throws Exception
      */
-    public function request($path, $data, $method, array $headers) {
+    public function request($path, $data, $method, array $headers, $language = 'de') {
         // Open socket.
         $context = stream_context_create();
         stream_context_set_option($context, "ssl", "cafile", dirname(__FILE__).DIRECTORY_SEPARATOR."ca-bundle.crt");
@@ -90,6 +90,7 @@ class HttpsRequest {
         $headers["Accept"] = "application/json";
         $headers["User-Agent"] = Config::$USER_AGENT . '/' . Config::$SDK_VERSION;
         $headers["Connection"] = "close";
+        $headers["accept-language"] = $language;
 
         // Send client request.
         $header = "";
