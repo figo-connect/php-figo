@@ -148,7 +148,7 @@ class HttpsRequest {
 
         if ($code >= 400 && $code < 500) {
             $this->logFailedRequest($path, $responseArray, $loggingData);
-            throw new Exception($responseArray["error"]["name"] .": ". $responseArray["error"]["message"]." (Status: ".$responseArray["status"].")" , $responseArray["error"]["description"]);
+            throw new Exception("Code: ".$responseArray["error"]["code"], $responseArray["error"]["description"]);
         }
 
         if ($code === 503) {
