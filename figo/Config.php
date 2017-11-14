@@ -29,7 +29,7 @@ namespace figo;
  */
 class Config {
 
-    /** @var string figo Connect server hostname */
+    /** @var string figo Connect server address. This should be the full base url of the API */
     public static $API_ENDPOINT = "https://api.figo.me/v3";
 
     /** @var string figo Connect SSL/TLS certificate fingerprints */
