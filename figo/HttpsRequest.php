@@ -86,7 +86,7 @@ class HttpsRequest {
         }
 
         // Setup common HTTP headers.
-        $headers["Host"] = Config::$API_ENDPOINT;
+        $headers["Host"] = parse_url(Config::$API_ENDPOINT)['host'];
         $headers["Accept"] = "application/json";
         $headers["User-Agent"] = Config::$USER_AGENT . '/' . Config::$SDK_VERSION;
         $headers["Connection"] = "close";

@@ -30,7 +30,7 @@ namespace figo;
 class Config {
 
     /** @var string figo Connect server hostname */
-    public static $API_ENDPOINT = "api.figo.me";
+    public static $API_ENDPOINT = "https://api.figo.me/v3";
 
     /** @var string figo Connect SSL/TLS certificate fingerprints */
     public static $VALID_FINGERPRINTS = array("07:0F:14:AE:B9:4A:FB:3D:F8:00:E8:2B:69:A8:51:5C:EE:D2:F5:B1:BA:89:7B:EF:64:32:45:8F:61:CF:9E:33",
