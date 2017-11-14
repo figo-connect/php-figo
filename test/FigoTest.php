@@ -75,11 +75,11 @@ class SessionTest extends PHPUnit_Framework_TestCase {
 
     public function test_error_handling() {
          $this->setExpectedException('Exception');
-         $this->sut->get_sync_url("http://localhost:3003/", "");
+         $this->sut->get_sync_url("edsa", "");
     }
 
     public function test_sync_url() {
-        $sync_url = $this->sut->get_sync_url("qwe", "qew");
+        $sync_url = $this->sut->get_sync_url("http://localhost:3003/", "qew");
         $this->assertGreaterThan(0, strlen($sync_url));
     }
 
@@ -170,7 +170,7 @@ class SessionTest extends PHPUnit_Framework_TestCase {
     public function test_setup_bank_account() {
         $response = $this->sut->setup_bank_account(
             "90090042", ["demo", "demo"],
-            ["country" => "de", "save_pin" => true]
+            ["save_pin" => true]
         );
         $this->assertTrue(isset($response["task_token"]));
     }
