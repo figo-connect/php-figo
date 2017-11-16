@@ -154,30 +154,6 @@ class SessionTest extends PHPUnit_Framework_TestCase {
 
         $this->assertEquals('A13318.2', $security[0]->account_id);
     }
-
-    public function test_standing_order() {
-        $standing_order = $this->sut->get_standing_order('SO13318.1');
-        $this->assertInstanceOf('figo\StandingOrder', $standing_order);
-        $this->assertEquals(1, count($standing_order));
-        $this->assertEquals(100, $standing_order->amount);
-        $this->assertEquals('SO13318.1', $standing_order->standing_order_id);
-
-        $standing_order = null;
-        $standing_order = $this->sut->get_standing_orders(true);
-
-        $this->assertInternalType('array', $standing_order);
-        $this->assertInstanceOf('figo\StandingOrder', $standing_order[0]);
-        $this->assertEquals(100.00, $standing_order[0]->amount);
-    }
-
-    public function test_setup_bank_account() {
-        $response = $this->sut->setup_bank_account(
-            "90090042", ["demo", "demo"],
-            ["save_pin" => true]
-        );
-        $this->assertTrue(isset($response["task_token"]));
-    }
-
 }
 
 
