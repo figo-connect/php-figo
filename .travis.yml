@@ -6,7 +6,8 @@ php:
 before_script: composer install
 script: vendor/bin/phpunit
 env:
-  - FIGO_API_ENDPOINT=https://staging.figo.me/v3
-  - FIGO_SSL_FINGERPRINT=D0:03:9E:F0:8F:BD:48:67:86:71:CE:9D:A5:54:24:81:63:D7:D9:4D:ED:F1:6A:55:F0:52:C7:0A:AB:7B:B8:9D
-  - FIGO_CLIENT_ID=CaESKmC8MAhNpDe5rvmWnSkRE_7pkkVIIgMwclgzGcQY
-  - FIGO_CLIENT_SECRET=STdzfv0GXtEj_bwYn7AgCVszN1kKq5BdgEIKOM_fzybQ
+  global:
+    - FIGO_API_ENDPOINT=https://staging.figo.me/v3
+    - FIGO_SSL_FINGERPRINT=D0:03:9E:F0:8F:BD:48:67:86:71:CE:9D:A5:54:24:81:63:D7:D9:4D:ED:F1:6A:55:F0:52:C7:0A:AB:7B:B8:9D
+    - FIGO_CLIENT_ID=CaESKmC8MAhNpDe5rvmWnSkRE_7pkkVIIgMwclgzGcQY
+    - FIGO_CLIENT_SECRET=STdzfv0GXtEj_bwYn7AgCVszN1kKq5BdgEIKOM_fzybQ
