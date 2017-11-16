@@ -30,20 +30,23 @@ use figo\Payment;
 class SessionTest extends PHPUnit_Framework_TestCase {
 
     protected $sut;
+    protected $demo_access_token = "ASHWLIkouP2O6_bgA2wWReRhletgWKHYjLqDaqb0LFfamim9RjexTo22ujRIP_cjLiRiSyQXyt2kM1eXU2XLFZQ0Hro15HikJQT_eNeT_9XQ";
+    protected $api_endpoint = "https://staging.figo.me/v3";
+    protected $fingerprints = array("D0:03:9E:F0:8F:BD:48:67:86:71:CE:9D:A5:54:24:81:63:D7:D9:4D:ED:F1:6A:55:F0:52:C7:0A:AB:7B:B8:9D");
 
     protected function setUp() {
-        $this->sut = new Session("ASHWLIkouP2O6_bgA2wWReRhletgWKHYjLqDaqb0LFfamim9RjexTo22ujRIP_cjLiRiSyQXyt2kM1eXU2XLFZQ0Hro15HikJQT_eNeT_9XQ");
+        $this->sut = new Session($this->demo_access_token, $this->api_endpoint, $this->fingerprints);
     }
 
     public function test_accounts() {
         $accounts = $this->sut->get_accounts();
         $this->assertGreaterThan(0, count($accounts));
 
-        $account = $this->sut->get_account("A1.1");
-        $this->assertEquals($account->account_id, "A1.1");
+        $account = $this->sut->get_account("A13318.1");
+        $this->assertEquals($account->account_id, "A13318.1");
 
-        $account = $this->sut->get_account("A1.2");
-        $this->assertEquals($account->account_id, "A1.2");
+        $account = $this->sut->get_account("A13318.3");
+        $this->assertEquals($account->account_id, "A13318.3");
         $this->assertNotNull($account->balance->balance);
         $this->assertNotNull($account->balance->balance_date);
 
@@ -70,16 +73,16 @@ class SessionTest extends PHPUnit_Framework_TestCase {
     }
 
     public function test_missing_handling() {
-        $this->assertNull($this->sut->get_account("A1.42"));
+        $this->assertNull($this->sut->get_account("A13318.42"));
     }
 
     public function test_error_handling() {
          $this->setExpectedException('Exception');
-         $this->sut->get_sync_url("http://localhost:3003/", "");
+         $this->sut->get_sync_url("edsa", "");
     }
 
     public function test_sync_url() {
-        $sync_url = $this->sut->get_sync_url("qwe", "qew");
+        $sync_url = $this->sut->get_sync_url("http://localhost:3003/", "qew");
         $this->assertGreaterThan(0, strlen($sync_url));
     }
 
@@ -107,15 +110,15 @@ class SessionTest extends PHPUnit_Framework_TestCase {
     }
 
     public function test_create_update_delete_payment() {
-        $added_payment = $this->sut->add_payment(new Payment($this->sut, array("account_id" => "A1.1", "type" => "Transfer", "account_number" => "4711951501", "bank_code" => "90090042", "name" => "figo", "purpose" => "Thanks for all the fish.", "amount" => 0.89)));
-        $this->assertEquals($added_payment->account_id, "A1.1");
+        $added_payment = $this->sut->add_payment(new Payment($this->sut, array("account_id" => "A13318.1", "type" => "Transfer", "account_number" => "4711951501", "bank_code" => "90090042", "name" => "figo", "purpose" => "Thanks for all the fish.", "amount" => 0.89)));
+        $this->assertEquals($added_payment->account_id, "A13318.1");
         $this->assertEquals($added_payment->bank_name, "Demobank");
         $this->assertEquals($added_payment->amount, 0.89);
 
         $added_payment->amount = 2.39;
         $modified_payment = $this->sut->modify_payment($added_payment);
         $this->assertEquals($modified_payment->payment_id, $added_payment->payment_id);
-        $this->assertEquals($modified_payment->account_id, "A1.1");
+        $this->assertEquals($modified_payment->account_id, "A13318.1");
         $this->assertEquals($modified_payment->bank_name, "Demobank");
         $this->assertEquals($modified_payment->amount, 2.39);
 
@@ -125,11 +128,11 @@ class SessionTest extends PHPUnit_Framework_TestCase {
     }
 
     public function test_security() {
-        $security = $this->sut->get_security('A1.4', 'S1.1');
+        $security = $this->sut->get_security('A13318.2', 'S13318.1');
         $this->assertInstanceOf('figo\Security', $security);
         $this->assertEquals(1, count($security));
 
-        $this->assertEquals('S1.1', $security->security_id);
+        $this->assertEquals('S13318.1', $security->security_id);
 
         $options = array(
             'count' => 2,
@@ -142,39 +145,15 @@ class SessionTest extends PHPUnit_Framework_TestCase {
 
         $options = array(
             'count' => 1,
-            'account_id' =>'A1.4'
+            'account_id' =>'A13318.2'
         );
 
         $security = $this->sut->get_securities($options);
         $this->assertInternalType('array', $security);
         $this->assertInstanceOf('figo\Security', $security[0]);
 
-        $this->assertEquals('A1.4', $security[0]->account_id);
+        $this->assertEquals('A13318.2', $security[0]->account_id);
     }
-
-    public function test_standing_order() {
-        $standing_order = $this->sut->get_standing_order('SO1.1');
-        $this->assertInstanceOf('figo\StandingOrder', $standing_order);
-        $this->assertEquals(1, count($standing_order));
-        $this->assertEquals(100, $standing_order->amount);
-        $this->assertEquals('SO1.1', $standing_order->standing_order_id);
-
-        $standing_order = null;
-        $standing_order = $this->sut->get_standing_orders(true);
-
-        $this->assertInternalType('array', $standing_order);
-        $this->assertInstanceOf('figo\StandingOrder', $standing_order[0]);
-        $this->assertEquals(100.00, $standing_order[0]->amount);
-    }
-
-    public function test_setup_bank_account() {
-        $response = $this->sut->setup_bank_account(
-            "90090042", ["demo", "demo"],
-            ["country" => "de", "save_pin" => true]
-        );
-        $this->assertTrue(isset($response["task_token"]));
-    }
-
 }
 
 

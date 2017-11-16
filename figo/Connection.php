@@ -69,6 +69,8 @@ class Connection {
             $this->apiEndpoint = $apiEndpoint;
         }
 
+        $this->apiUrl = parse_url($this->apiEndpoint);
+
         if ($fingerprints) {
             $this->fingerprints = $fingerprints;
         }
@@ -107,7 +109,8 @@ class Connection {
                         "Content-Type"   => $content_type,
                          "Content-Length" => strlen($data));
 
-        $request = new HttpsRequest($this->apiEndpoint, $this->fingerprints, $this->logger);
+        $request = new HttpsRequest($this->apiUrl['host'], $this->fingerprints, $this->logger);
+        $path = $this->apiUrl['path'] . $path;
         return $request->request($path, $data, $method, $headers, $language);
     }
 
@@ -134,7 +137,7 @@ class Connection {
         if (!is_null($scope)) {
             $data["scope"] = $scope;
         }
-        return "https://".Config::$API_ENDPOINT."/auth/code?".http_build_query($data);
+        return $this->apiEndpoint."/auth/code?".http_build_query($data);
     }
 
 
