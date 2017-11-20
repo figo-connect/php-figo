@@ -291,16 +291,7 @@ class Connection {
      */
     public function credential_login($username, $password, $device_name = null, $device_type = null, $device_udid = null, $scope = null)
     {
-        $options = [ "grant_type" => "password", "username" => $username, "password" => $password ];
-        if ($device_name)
-            $options["device_name"] = $device_name;
-        if ($device_type)
-            $options["device_type"] = $device_type;
-        if ($device_udid)
-            $options["device_udid"] = $device_udid;
-        if ($scope)
-            $options["scope"] = $scope;
-        return $this->query_api("/auth/token", $options, "POST", "json_encode");
+        return $this->native_client_login($username, $password, $scope);
     }
 
 
