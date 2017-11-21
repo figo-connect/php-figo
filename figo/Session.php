@@ -23,6 +23,8 @@
 
 namespace figo;
 
+require_once("utils.php");
+
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
@@ -62,8 +64,7 @@ class Session {
         if ($apiEndpoint) {
             $this->apiEndpoint = $apiEndpoint;
         }
-
-        $this->apiUrl = parse_url($this->apiEndpoint);
+        $this->apiUrl = parse_api_endpoint($this->apiEndpoint);
 
         if ($fingerprints) {
             $this->fingerprints = $fingerprints;
