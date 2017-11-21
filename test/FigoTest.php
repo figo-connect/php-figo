@@ -29,33 +29,31 @@ use figo\Payment;
 
 class SessionTest extends PHPUnit_Framework_TestCase {
 
-    protected static $api_endpoint = "https://staging.figo.me/v3";
-    protected static $fingerprints = array("D0:03:9E:F0:8F:BD:48:67:86:71:CE:9D:A5:54:24:81:63:D7:D9:4D:ED:F1:6A:55:F0:52:C7:0A:AB:7B:B8:9D");
-
+    protected static $api_endpoint;
     protected static $connection;
     protected static $email;
+    protected static $fingerprints;
     protected static $password;
     protected static $session;
 
     protected $access_token;
     protected $account_id;
-    protected $sec_account_id;
 
-    public static function setUpBeforeClass()
-    {
+    public static function setUpBeforeClass()   {
+        $fingerprints = explode(",", getenv("FIGO_SSL_FINGERPRINT"));
+        $api_endpoint = getenv("FIGO_API_ENDPOINT");
         self::$connection = new Connection(getenv("FIGO_CLIENT_ID"), getenv("FIGO_CLIENT_SECRET"),
-            "http://my-domain.org/redirect-url", self::$api_endpoint, self::$fingerprints);
+            "http://example.com/callback.php", $api_endpoint, $fingerprints);
         $name = "PHP SDK Test";
         self::$email = "php.sdk.".rand()."@figo.io";
         self::$password = "sdk_test_pass_".rand();
         self::$connection->create_user($name, self::$email, self::$password);
         $response = self::$connection->native_client_login(self::$email, self::$password);
         $access_token = $response["access_token"];
-        self::$session = new Session($access_token, self::$api_endpoint, self::$fingerprints);
+        self::$session = new Session($access_token, $api_endpoint, $fingerprints);
     }
 
-    public static function tearDownAfterClass()
-    {
+    public static function tearDownAfterClass() {
         self::$session->remove_user();
     }
 
@@ -72,6 +70,7 @@ class SessionTest extends PHPUnit_Framework_TestCase {
             if($task_state['is_ended'] == true) {
                 break;
             }
+            $this->assertFalse($task_state['is_erroneous']);
             sleep(1);
         }
     }
@@ -143,7 +142,7 @@ class SessionTest extends PHPUnit_Framework_TestCase {
     }
 
     public function test_sync_url() {
-        $sync_url = $this::$session->get_sync_url("http://localhost:3003/", "qew");
+        $sync_url = $this::$session->get_sync_url("http://example.com/callback.php", "qew");
         $this->assertGreaterThan(0, strlen($sync_url));
     }
 
