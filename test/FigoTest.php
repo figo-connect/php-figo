@@ -197,5 +197,13 @@ class SessionTest extends PHPUnit_Framework_TestCase {
         );
         $this::$connection->get_supported_payment_services(null, null, 'fr');
     }
+
+    public function test_get_bank() 
+    {
+        $accounts = $this::$session->get_accounts();
+        $bank_id = $accounts[0]->bank_id;
+        $bank = $this::$session->get_bank($bank_id);
+        $this->assertNotNull($bank);
+    }
 }
 ?>

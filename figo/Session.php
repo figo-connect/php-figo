@@ -252,17 +252,6 @@ class Session {
     }
 
     /**
-     * Modify an account
-     *
-     * @param Account the modified account to be saved
-     * @return Account 'Account' object for the updated account returned by server
-     */
-    public function modify_account($account) {
-        $response = $this->query_api("/rest/accounts/".$account->account_id, $account->dump(), "PUT");
-        return (is_null($response) ? null : new Account($this, $response));
-    }
-
-    /**
      * Remove an account
      *
      * @param string Account to be removed or its ID
