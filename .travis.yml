@@ -5,9 +5,3 @@ php:
   - 7.1
 before_script: composer install
 script: vendor/bin/phpunit
-env:
-  global:
-    - secure: bKDnQnsML4R5+KInG3c3SCEOr5VJQ1moEdwQAVtQLJLNsajBviODY9L+G3ENER1kmtrpDwkWwI014Fna8fJuhJmkabg8DVQx7Zl0+Ok7+y7VjHevu9ggJqNJfyKFSVGN0/sNJdt6ImURkSYH4VX+CDkDPvuz7vOPmPgddZjxS60=
-    - secure: B/hWxuZvWHQAha90zIXEn9czWV9nTRxEw10WkmefqWWbEyT+40lXcY8mF626MFiIg3q1uwA1ikgh31EzOGXotqhqHCXheK/IbjBAf6JbgHvKi8+Ww4bwtESkqbUNDQO8HryG1SSU/TWhLDZDudHbwDZ6pF/5DNb1ZkhtyBnAZoo=
-    - secure: O5qYfh3gmh+OZUMBF2+4SyUNppcKgbrtv7xu9K1TS9YtFs6dNxh1ZOL0V+EouM1HTdHTFJSHaI4KINS5xsqo6iwL7pvXO35px1S2aItQuiYH35QB73qVU/28Y0W73lUgYm9MfYSNuUOpB+J5/lS5gKpDqGj6mb32+voc0K2w+fI=
-    - secure: TA1cdINl/YBJt4fAXmQK85L24DVyX7EpoA9An7LOwaQ4vDskvV62HR2iiM4elETHFqex+odAdT/kIlxvL0brhWBS8Tp7r5V0UhBavj8VO6iSDUivvkkw12fnC/17MTOLFs4/Ktj7QGTdhOxxX42sEavKFa4ZD5ys1ROj+xr5veQ=
