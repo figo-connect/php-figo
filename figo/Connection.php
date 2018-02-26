@@ -23,6 +23,8 @@
 
 namespace figo;
 
+require_once("utils.php");
+
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
@@ -68,6 +70,7 @@ class Connection {
         if ($apiEndpoint) {
             $this->apiEndpoint = $apiEndpoint;
         }
+        $this->apiUrl = parse_api_endpoint($this->apiEndpoint);
 
         if ($fingerprints) {
             $this->fingerprints = $fingerprints;
@@ -107,7 +110,8 @@ class Connection {
                         "Content-Type"   => $content_type,
                          "Content-Length" => strlen($data));
 
-        $request = new HttpsRequest($this->apiEndpoint, $this->fingerprints, $this->logger);
+        $request = new HttpsRequest($this->apiUrl['host'], $this->fingerprints, $this->logger);
+        $path = $this->apiUrl['path'] . $path;
         return $request->request($path, $data, $method, $headers, $language);
     }
 
@@ -134,7 +138,7 @@ class Connection {
         if (!is_null($scope)) {
             $data["scope"] = $scope;
         }
-        return "https://".Config::$API_ENDPOINT."/auth/code?".http_build_query($data);
+        return $this->apiEndpoint."/auth/code?".http_build_query($data);
     }
 
 
@@ -288,16 +292,7 @@ class Connection {
      */
     public function credential_login($username, $password, $device_name = null, $device_type = null, $device_udid = null, $scope = null)
     {
-        $options = [ "grant_type" => "password", "username" => $username, "password" => $password ];
-        if ($device_name)
-            $options["device_name"] = $device_name;
-        if ($device_type)
-            $options["device_type"] = $device_type;
-        if ($device_udid)
-            $options["device_udid"] = $device_udid;
-        if ($scope)
-            $options["scope"] = $scope;
-        return $this->query_api("/auth/token", $options, "POST", "json_encode");
+        return $this->native_client_login($username, $password, $scope);
     }
 
 

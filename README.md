@@ -1,7 +1,7 @@
 php-figo [![Build Status](https://secure.travis-ci.org/figo-connect/php-figo.png)](https://travis-ci.org/figo-connect/php-figo) [![Packagist Version](http://img.shields.io/packagist/v/figo/figo.svg)](https://packagist.org/packages/figo/figo)
 ========
 
-PHP bindings for the figo Connect API: http://docs.figo.io
+PHP bindings for the figo Connect API: http://docs.figo.io/v3/
 
 Usage
 =====

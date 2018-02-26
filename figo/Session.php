@@ -23,6 +23,8 @@
 
 namespace figo;
 
+require_once("utils.php");
+
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
@@ -62,6 +64,7 @@ class Session {
         if ($apiEndpoint) {
             $this->apiEndpoint = $apiEndpoint;
         }
+        $this->apiUrl = parse_api_endpoint($this->apiEndpoint);
 
         if ($fingerprints) {
             $this->fingerprints = $fingerprints;
@@ -93,8 +96,8 @@ class Session {
                          "Content-Type"   => "application/json",
                          "Content-Length" => strlen($data));
 
-        $request = new HttpsRequest($this->apiEndpoint, $this->fingerprints, $this->logger);
-
+        $request = new HttpsRequest($this->apiUrl['host'], $this->fingerprints, $this->logger);
+        $path = $this->apiUrl['path'] . $path;
         return $request->request($path, $data, $method, $headers);
     }
 
@@ -245,17 +248,6 @@ class Session {
         }
         $data["save_pin"] = (is_bool($save_pin)) ? $save_pin : false;
         $response = $this->query_api("/rest/accounts", $data, "POST");
-        return (is_null($response) ? null : new Account($this, $response));
-    }
-
-    /**
-     * Modify an account
-     *
-     * @param Account the modified account to be saved
-     * @return Account 'Account' object for the updated account returned by server
-     */
-    public function modify_account($account) {
-        $response = $this->query_api("/rest/accounts/".$account->account_id, $account->dump(), "PUT");
         return (is_null($response) ? null : new Account($this, $response));
     }
 
@@ -465,7 +457,7 @@ class Session {
     public function get_sync_url($redirect_uri, $state) {
         $data = array("redirect_uri" => $redirect_uri, "state" => $state);
         $response = $this->query_api("/rest/sync", $data, "POST");
-        return "https://".Config::$API_ENDPOINT."/task/start?id=".$response["task_token"];
+        return $this->apiEndpoint."/task/start?id=".$response["task_token"];
     }
 
 
@@ -717,7 +709,7 @@ class Session {
         if (is_null($response)) {
             return  null;
         } else {
-            return "https://".Config::$API_ENDPOINT."/task/start?id=".$response["task_token"];
+            return $this->apiEndpoint."/task/start?id=".$response["task_token"];
         }
     }
 }
