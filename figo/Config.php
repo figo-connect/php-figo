@@ -33,7 +33,7 @@ class Config {
     public static $API_ENDPOINT = "https://api.figo.me/v3";
 
     /** @var string figo Connect SSL/TLS certificate fingerprints */
-    public static $VALID_FINGERPRINTS = array("07:0F:14:AE:B9:4A:FB:3D:F8:00:E8:2B:69:A8:51:5C:EE:D2:F5:B1:BA:89:7B:EF:64:32:45:8F:61:CF:9E:33",
+    public static $VALID_FINGERPRINTS = array("CD:F3:D3:26:27:89:91:B9:CD:AE:4B:10:6C:96:81:B7:EB:B3:38:10:C4:72:37:6A:4D:9C:84:B7:B3:DC:D6:8D",
                                               "79:B2:A2:93:00:85:3B:06:92:B1:B5:F2:24:79:48:58:3A:A5:22:0F:C5:CD:E9:49:9A:C8:45:1E:DB:E0:DA:50");
     /**
      * @var string User agent used for API requests
