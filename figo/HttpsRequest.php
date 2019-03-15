@@ -37,16 +37,11 @@ class HttpsRequest {
      * @var string
      */
     private $apiEndpoint;
-    /**
-     * @var array
-     */
-    private $fingerprints;
-
-    public function __construct($apiEndpoint, array $fingerprints, LoggerInterface $logger)
+ 
+    public function __construct($apiEndpoint, LoggerInterface $logger)
     {
         $this->logger = $logger;
         $this->apiEndpoint = $apiEndpoint;
-        $this->fingerprints = $fingerprints;
     }
 
     /**
@@ -71,19 +66,6 @@ class HttpsRequest {
             throw new Exception("socket_error", $errstr);
         }
         stream_set_timeout($fp, 60);
-
-        // Verify fingerprint of server SSL/TLS certificate.
-        $options = stream_context_get_options($context);
-        if (isset($options["ssl"]) && isset($options["ssl"]["peer_certificate"])) {
-            $certificate = $options["ssl"]["peer_certificate"];
-            openssl_x509_export($certificate, $certificate);
-            $fingerprint = hash("sha256", base64_decode(preg_replace("/-.*/", "", $certificate)));
-            $fingerprint = implode(":", str_split(strtoupper($fingerprint), 2));
-            if (!in_array($fingerprint, $this->fingerprints)) {
-                fclose($fp);
-                throw new Exception("ssl_error", "SSL/TLS certificate fingerprint mismatch.");
-            }
-        }
 
         // Setup common HTTP headers.
         $headers["Host"] = parse_url(Config::$API_ENDPOINT)['host'];
