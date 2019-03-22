@@ -32,7 +32,6 @@ class SessionTest extends PHPUnit_Framework_TestCase {
     protected static $api_endpoint;
     protected static $connection;
     protected static $email;
-    protected static $fingerprints;
     protected static $password;
     protected static $session;
 
@@ -40,17 +39,16 @@ class SessionTest extends PHPUnit_Framework_TestCase {
     protected $account_id;
 
     public static function setUpBeforeClass()   {
-        $fingerprints = explode(",", getenv("FIGO_SSL_FINGERPRINT"));
         $api_endpoint = getenv("FIGO_API_ENDPOINT");
         self::$connection = new Connection(getenv("FIGO_CLIENT_ID"), getenv("FIGO_CLIENT_SECRET"),
-            "http://example.com/callback.php", $api_endpoint, $fingerprints);
+            "http://example.com/callback.php", $api_endpoint);
         $name = "PHP SDK Test";
         self::$email = "php.sdk.".rand()."@figo.io";
         self::$password = "sdk_test_pass_".rand();
         self::$connection->create_user($name, self::$email, self::$password);
         $response = self::$connection->native_client_login(self::$email, self::$password);
         $access_token = $response["access_token"];
-        self::$session = new Session($access_token, $api_endpoint, $fingerprints);
+        self::$session = new Session($access_token, $api_endpoint);
     }
 
     public static function tearDownAfterClass() {

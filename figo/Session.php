@@ -41,23 +41,17 @@ class Session {
      * @var null API endpoint
      */
     private $apiEndpoint;
-    /**
-     * @var array Fingerprints for API endpoint
-     */
-    private $fingerprints;
 
     /**
      * Constructor
      *
      * @param string the access token
      * @param string $apiEndpoint Custom API endpoint
-     * @param array $fingerprints Fingerprints for custom API endpoint
      */
-    public function __construct($access_token, $apiEndpoint = null, array $fingerprints = null) {
+    public function __construct($access_token, $apiEndpoint = null) {
         // set default values
         $this->logger = new NullLogger();
         $this->apiEndpoint = Config::$API_ENDPOINT;
-        $this->fingerprints = Config::$VALID_FINGERPRINTS;
 
         $this->access_token = $access_token;
 
@@ -66,9 +60,6 @@ class Session {
         }
         $this->apiUrl = parse_api_endpoint($this->apiEndpoint);
 
-        if ($fingerprints) {
-            $this->fingerprints = $fingerprints;
-        }
     }
 
     /**
@@ -96,7 +87,7 @@ class Session {
                          "Content-Type"   => "application/json",
                          "Content-Length" => strlen($data));
 
-        $request = new HttpsRequest($this->apiUrl['host'], $this->fingerprints, $this->logger);
+        $request = new HttpsRequest($this->apiUrl['host'], $this->logger);
         $path = $this->apiUrl['path'] . $path;
         return $request->request($path, $data, $method, $headers);
     }

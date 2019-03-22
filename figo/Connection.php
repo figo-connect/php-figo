@@ -43,10 +43,6 @@ class Connection {
      * @var null API endpoint
      */
     private $apiEndpoint;
-    /**
-     * @var array Fingerprints for API endpoint
-     */
-    private $fingerprints;
 
     /**
      * Constructor
@@ -55,14 +51,12 @@ class Connection {
      * @param string the client secret
      * @param string redirect URI
      * @param string $apiEndpoint Custom API endpoint
-     * @param array $fingerprints Fingerprints for custom API endpoint
      */
-    public function __construct($client_id, $client_secret, $redirect_uri = null, $apiEndpoint = null, array $fingerprints = null) {
+    public function __construct($client_id, $client_secret, $redirect_uri = null, $apiEndpoint = null) {
         // set default values
         $this->logger = new NullLogger();
         $this->apiEndpoint = Config::$API_ENDPOINT;
-        $this->fingerprints = Config::$VALID_FINGERPRINTS;
-
+    
         $this->client_id = $client_id;
         $this->client_secret = $client_secret;
         $this->redirect_uri = $redirect_uri;
@@ -72,9 +66,6 @@ class Connection {
         }
         $this->apiUrl = parse_api_endpoint($this->apiEndpoint);
 
-        if ($fingerprints) {
-            $this->fingerprints = $fingerprints;
-        }
     }
 
     /**
@@ -110,7 +101,7 @@ class Connection {
                         "Content-Type"   => $content_type,
                          "Content-Length" => strlen($data));
 
-        $request = new HttpsRequest($this->apiUrl['host'], $this->fingerprints, $this->logger);
+        $request = new HttpsRequest($this->apiUrl['host'], $this->logger);
         $path = $this->apiUrl['path'] . $path;
         return $request->request($path, $data, $method, $headers, $language);
     }
