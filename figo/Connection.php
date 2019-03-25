@@ -98,8 +98,10 @@ class Connection {
         }
 
         $headers = array("Authorization"  => "Basic ".base64_encode($this->client_id.":".$this->client_secret),
-                        "Content-Type"   => $content_type,
                          "Content-Length" => strlen($data));
+        if (strlen($data) > 0) {
+            $headers["Content-Type"] = $content_type;
+        }
 
         $request = new HttpsRequest($this->apiUrl['host'], $this->logger);
         $path = $this->apiUrl['path'] . $path;
